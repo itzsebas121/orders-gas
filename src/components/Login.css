@@ -1,0 +1,34 @@
+#login{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+  background: linear-gradient(rgb(46, 126, 237), #2c2d84);
+
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    align-items: center;
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 25px;
+}
+form p{
+    color: #807e7e;
+}
+input{
+    text-align: center  ;
+    font-size: 1.1em;
+    color: #434343;
+}
+input::placeholder{
+    color: #d1cece;
+}
+button{
+    width: 100%;
+}
