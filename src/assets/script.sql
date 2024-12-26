@@ -90,16 +90,10 @@ EXEC InsertClient @Name = 'sebas', @LastName = 'Tipan', @Location='Quero',  @Use
 GO
 
 
-
-INSERT INTO Clients (Name, LastName, Location, Username)
-VALUES
-('John', 'Doe', '123 Main St','johndoe'),
-('Jane', 'Doe', '456 Elm St', 'johndoe2');
-
-INSERT INTO Distributors (Name, LastName, Username)
-VALUES
-('Distributor', 'One', 'distributor1'),
-('Distributor', 'Two', 'distributor2');
+--INSERT INTO Distributors (Name, LastName, Username)
+--VALUES
+--('Distributor', 'One', 'distributor1'),
+--('Distributor', 'Two', 'distributor2');
 
 INSERT INTO Cylinders (TypeCylinder, Quantity)
 VALUES
