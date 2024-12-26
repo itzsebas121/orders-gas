@@ -66,7 +66,7 @@ OPEN SYMMETRIC KEY MySymmetricKey
     DECRYPTION BY CERTIFICATE MyCert;
 GO
 
-CREATE PROCEDURE InsertClient 
+CREATE OR ALTER PROCEDURE InsertClient 
     @Name NVARCHAR(100),
     @LastName NVARCHAR(100),
     @Location NVARCHAR(255),
@@ -74,26 +74,75 @@ CREATE PROCEDURE InsertClient
     @HashedPassword NVARCHAR(100)
 AS
 BEGIN
-    DECLARE @EncryptedPassword VARBINARY(MAX);
-    SET @EncryptedPassword = ENCRYPTBYKEY(KEY_GUID('MySymmetricKey'), @HashedPassword);
+    BEGIN TRY
+        BEGIN TRANSACTION;
+		OPEN SYMMETRIC KEY MySymmetricKey DECRYPTION BY CERTIFICATE MyCert;
+        DECLARE @EncryptedPassword VARBINARY(MAX);
+        SET @EncryptedPassword = ENCRYPTBYKEY(KEY_GUID('MySymmetricKey'), @HashedPassword);
+		CLOSE SYMMETRIC KEY MySymmetricKey;
 
-    INSERT INTO Users (UserType, Username, HashedPassword)
-    VALUES ('Client',@UserName, @EncryptedPassword);
-    INSERT INTO Clients (Name, LastName, Location, Username)
-    VALUES(@Name, @LastName, @Location,@UserName);
+        INSERT INTO Users (UserType, Username, HashedPassword)
+        VALUES ('Client', @UserName, @EncryptedPassword);
 
+        INSERT INTO Clients (Name, LastName, Location, Username)
+        VALUES (@Name, @LastName, @Location, @UserName);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        IF ERROR_NUMBER() = 2627 OR ERROR_NUMBER() = 2601
+        BEGIN
+            RAISERROR('Error: El usuario ya existe.', 16, 1);
+        END
+        ELSE
+        BEGIN
+            THROW;
+        END
+    END CATCH
+END;
+GO
+CREATE OR ALTER PROCEDURE InsertDistributor
+    @Name NVARCHAR(100),
+    @LastName NVARCHAR(100),
+    @UserName NVARCHAR(100),
+    @HashedPassword NVARCHAR(100)
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+		OPEN SYMMETRIC KEY MySymmetricKey DECRYPTION BY CERTIFICATE MyCert;
+        DECLARE @EncryptedPassword VARBINARY(MAX);
+        SET @EncryptedPassword = ENCRYPTBYKEY(KEY_GUID('MySymmetricKey'), @HashedPassword);
+		CLOSE SYMMETRIC KEY MySymmetricKey;
+
+        INSERT INTO Users (UserType, Username, HashedPassword)
+        VALUES ('Distributor', @UserName, @EncryptedPassword);
+
+        INSERT INTO Distributors (Name, LastName, Username)
+        VALUES (@Name, @LastName,  @UserName);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        IF ERROR_NUMBER() = 2627 OR ERROR_NUMBER() = 2601
+        BEGIN
+            RAISERROR('Error: El usuario ya existe.', 16, 1);
+        END
+        ELSE
+        BEGIN
+            THROW;
+        END
+    END CATCH
 END;
 GO
 
 EXEC InsertClient @Name = 'sebas', @LastName = 'Tipan', @Location='Quero',  @UserName = 'itzsebas121', @HashedPassword = 'xdsebas12';
+EXEC InsertDistributor @Name = 'distribuidor1', @LastName = 'Lopez',  @UserName = 'dis1', @HashedPassword = 'distribuidor1';
 
 GO
-
-
---INSERT INTO Distributors (Name, LastName, Username)
---VALUES
---('Distributor', 'One', 'distributor1'),
---('Distributor', 'Two', 'distributor2');
 
 INSERT INTO Cylinders (TypeCylinder, Quantity)
 VALUES
@@ -135,8 +184,6 @@ BEGIN
 
     IF @Password != @EncryptedPassword
     BEGIN
-		PRINT @EncryptedPassword;
-		PRINT @HashedPassword;
         PRINT 'Contraseña incorrecta';
         RETURN;
     END
