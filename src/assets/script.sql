@@ -153,15 +153,15 @@ VALUES
 INSERT INTO Orders (ClientID, DistributorID, OrderDate, OrderStatus, Cylinder, Quantity, Location)
 VALUES
 (1, 1, GETDATE(), 'Pending', 1, 10, '123 Main St'),
-(2, 2, GETDATE(), 'Completed', 2, 5, '456 Elm St'),
-(1, 2, GETDATE(), 'In Progress', 3, 15, '789 Maple Ave');
+(1, 1, GETDATE(), 'Completed', 2, 5, '456 Elm St'),
+(1, 1, GETDATE(), 'In Progress', 3, 15, '789 Maple Ave');
 GO
 
 CREATE OR ALTER PROCEDURE GetUserInfo
     @Username NVARCHAR(50),
     @Password NVARCHAR(100)
 AS
-BEGIN
+BEGIN TRY
     DECLARE @UserType NVARCHAR(50);
     DECLARE @ClientID INT;
     DECLARE @DistributorID INT;
@@ -174,7 +174,7 @@ BEGIN
 
     IF @HashedPassword IS NULL
     BEGIN
-        PRINT 'Usuario no encontrado';
+        RAISERROR('Usuario no encontrado', 16, 1);
         RETURN;
     END
     DECLARE @EncryptedPassword VARCHAR(100);
@@ -184,7 +184,7 @@ BEGIN
 
     IF @Password != @EncryptedPassword
     BEGIN
-        PRINT 'Contraseña incorrecta';
+        RAISERROR ('Contraseña Incorrecta', 16, 1);
         RETURN;
     END
 
@@ -217,7 +217,9 @@ BEGIN
     BEGIN
         PRINT 'Tipo de usuario no válido';
     END
-END;
+END TRY
+BEGIN CATCH
+    SELECT ERROR_MESSAGE() AS ErrorMessage;
+END CATCH;
 GO
-
 EXEC GetUserInfo @Username = 'itzsebas121', @Password = 'xdsebas12';
