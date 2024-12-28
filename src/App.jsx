@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
-import Login from './components/Login'
-import Dashboard from './components/Dashboard'
+import Login from './Pages/Login/Login'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Client from './Pages/Client/Client'
+import Distributor from './Pages/Distributor/Distributor'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -11,7 +12,8 @@ function App() {
     <Router>
       <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/Client/*" element={<Client />} />
+          <Route path="/Distributor" element={<Distributor />} />
       </Routes>
     </Router>
   )

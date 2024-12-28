@@ -1,0 +1,38 @@
+.navigator-bar {
+    background: linear-gradient(180deg, #007BFF, #222);
+    color: #fff;
+    grid-area: navbar;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.item > p{
+    padding: 10px 30px;
+    transition: all .3s ease;
+    text-align: center;
+    color: white;
+    display: flex;
+    gap: 1em;
+}
+
+.item > p:hover {
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    transform: scale(1.2);
+    
+}
+
+.items-nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.item.active >p {
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    transform: scale(1.2);
+}

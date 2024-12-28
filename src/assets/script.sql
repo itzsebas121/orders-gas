@@ -36,12 +36,13 @@ CREATE TABLE Cylinders (
 CREATE TABLE Orders (
     OrderID INT PRIMARY KEY IDENTITY(1,1), 
     ClientID INT NOT NULL,
-    DistributorID INT NOT NULL,
+    DistributorID INT NULL,
     OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
     OrderStatus NVARCHAR(50) NOT NULL,
     Cylinder INT NOT NULL,
     Quantity INT NOT NULL,
     Location NVARCHAR(255),
+    Total FLOAT NULL,
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) 
         ON DELETE CASCADE,
     FOREIGN KEY (DistributorID) REFERENCES Distributors(DistributorID)

@@ -8,7 +8,9 @@
   background: linear-gradient(rgb(46, 126, 237), #2c2d84);
 
 }
-form{
+.form-login
+{
+    color: #434343;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -18,15 +20,16 @@ form{
     padding: 40px;
     border-radius: 25px;
 }
-form p{
+.form-login
+ p{
     color: #807e7e;
 }
-input{
+.input{
     text-align: center  ;
     font-size: 1.1em;
     color: #434343;
 }
-input::placeholder{
+.input::placeholder{
     color: #d1cece;
 }
 button{

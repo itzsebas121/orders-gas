@@ -7,22 +7,26 @@ const Login = () => {
     const navigate = useNavigate();
     const handleLogin = (e) => {
         e.preventDefault();
+        const type = 'Client';
         if (user === 'admin' && password === 'admin') {
-            alert("Acceso concedido");
-            navigate('/Dashboard');
+            if(type ==='Client'){
+                navigate('Client');
+            }else if('Distributor'){
+                navigate('Distributor');
+            }
         } else {
             alert('Credenciales incorrectas');
         }
     };
     return (
         <div id="login">
-            <form method="GET" action="" onSubmit={handleLogin}>
+            <form method="GET" action="" className="form-login" onSubmit={handleLogin}>
                 <h1>Iniciar Sesión</h1>
                 <p>Ingresa tus credenciales para iniciar sesión</p>
                 <br />
-                <input type="text" onChange={(e)=>setUser(e.target.value)} placeholder="Ingresa tu usuario" required />
+                <input className='input' type="text" onChange={(e)=>setUser(e.target.value)} placeholder="Ingresa tu usuario" required />
                 <br />
-                <input type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Ingresa tu contraseña" required />
+                <input className='input' type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Ingresa tu contraseña" required />
                 <br />
                 <button>Iniciar Sesión</button>
             </form>
