@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import CurrentOrders from "./CurrentOrders";
-import NewOrder from "./NewOrder";
+import React, { useState, lazy, Suspense } from "react";
 import './Home.css'
-import DetailOrder from "./DetailOrder";
+const DetailOrder = lazy(() => import("./DetailOrder"));
+const CurrentOrders = lazy(() => import("./CurrentOrders"));
+const NewOrder = lazy(() => import("./NewOrder"));
 const Home = () => {
     const [OrderId, setOrderId] = useState("");
     const [overlay, sendOverlay] = useState(false);
@@ -14,11 +14,13 @@ const Home = () => {
         sendOverlay(value)
     }
     return (
+        <Suspense>
         <div className="home">
             <NewOrder></NewOrder>
             <CurrentOrders sendOverlayClass={handleOverlay}></CurrentOrders>
             {overlay && <DetailOrder OrderId={OrderId} hidden={hiddenOverlay}></DetailOrder>}
         </div>
+        </Suspense>
     );
 }
 export default Home;

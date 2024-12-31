@@ -41,7 +41,6 @@ button {
     border: 1px solid #424242;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    background-color: #333;
 }
 
 .columns-form {
@@ -130,6 +129,9 @@ thead {
 .table {
     height: 250px;
     overflow: auto;
+}
+.formOrder .table{
+    height: 160px;
 }
 .history-order{
     width: 100%;
