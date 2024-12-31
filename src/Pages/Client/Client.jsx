@@ -4,7 +4,7 @@ import NavigatorBar from './components/Navigator-Bar'
 import { Routes, Route } from 'react-router-dom'
 import Loading from '../../components/Loading'
 
-const Home = lazy(() => import('./components/Home'))
+const Home = lazy (()=> import('./components/Home'))
 const Record = lazy(() => import('./components/Record'))
 const Client = () => {
   return (

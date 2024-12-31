@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import './styles.css'
-import Timeline from "../mini-components/Timeline";
-import ItemState from "../mini-components/ItemState";
+import Timeline from "../../mini-components/Timeline";
+import ItemState from "../../mini-components/ItemState";
 
 const DetailOrder = (props) => {
   const { OrderId, hidden } = props

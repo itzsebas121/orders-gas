@@ -1,8 +1,9 @@
 import React, { useState, lazy, Suspense } from "react";
 import './Home.css'
-const DetailOrder = lazy(() => import("./DetailOrder"));
-const CurrentOrders = lazy(() => import("./CurrentOrders"));
-const NewOrder = lazy(() => import("./NewOrder"));
+import './styles.css'
+const DetailOrder = lazy(() => import("./HomeComponents/DetailOrder"));
+const CurrentOrders = lazy(() => import("./HomeComponents/CurrentOrders"));
+const NewOrder = lazy(() => import("./HomeComponents/NewOrder"));
 const Home = () => {
     const [OrderId, setOrderId] = useState("");
     const [overlay, sendOverlay] = useState(false);

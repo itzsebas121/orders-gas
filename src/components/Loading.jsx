@@ -2,8 +2,8 @@ import React from 'react'
 import './style.css'
 const Loading = () => {
   return (
-    <div class="container-loading">
-    <div class="loader"></div>
+    <div className="container-loading">
+    <div className="loader"></div>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react'
-import ComponentLoading from "../../../components/ComponentLoading";
-const Form = lazy(() => import("../mini-components/Form"));
+import ComponentLoading from "/src/components/ComponentLoading";
+const Form = lazy(() => import("../../mini-components/Form"));
 
 const NewOrder = () => {
 

@@ -1,6 +1,4 @@
 import React from 'react'
-import './styles.css'
-
 function CurrentOrder(props) {
     const {onSendValue, OrderId, Status, Price} = props
 
