@@ -1,14 +1,17 @@
-.current-orders{
+.current-orders {
     display: flex;
     flex-direction: column;
-    height: 95vh;
+    height: 625px;
     overflow-y: auto;
     padding: 20px;
     gap: 2em;
     align-items: center;
+    background-color: #333;
+    border-radius: 10px;
+    border: 1px#424242 solid;
 }
 
-.card{
+.card {
     display: flex;
     justify-content: space-between;
     padding: 30px;
@@ -18,26 +21,25 @@
     gap: 2em;
     background-color: #333;
 }
-button{
+
+button {
     width: 150px;
     height: 40px;
 }
-.new-order{
+
+.new-order {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    padding: 20px;
     gap: 2em;
 }
+
 .formOrder {
     display: flex;
     flex-direction: column;
     gap: 1.5em;
-    max-width: 600px; 
-    margin: 0 auto; 
-    padding: 2em; 
-    border: 1px solid #cccccc36; 
-    border-radius: 8px; 
+    padding: 2em;
+    border: 1px solid #424242;
+    border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     background-color: #333;
 }
@@ -45,52 +47,243 @@ button{
 .columns-form {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5em; 
+    gap: 1.5em;
     align-items: center;
 }
 
 .input-form {
     display: flex;
     flex-direction: column;
-    gap: 0.5em; 
+    gap: 0.5em;
 }
 
-label {
-    font-weight: bold;
-}
-
-select, .input-form  input[type="number"], .input-form input[type="text"], .input-form input[type="password"] {
-    padding: 0.5em; 
-    border: 1px solid #cccccc36; 
-    border-radius: 4px; 
-    font-size: 1em; 
-    transition: border-color 0.3s; 
+select,
+.input-form input[type="number"],
+.input-form input[type="text"],
+.input-form input[type="password"] {
+    padding: 0.5em;
+    border: 1px solid #cccccc36;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: border-color 0.3s;
     background: #424242;
 }
- select:focus, input[type="number"]:focus, input[type="text"]:focus {
-    border-color: #007BFF; 
-    outline: none; 
+
+select:focus,
+input[type="number"]:focus,
+input[type="text"]:focus {
+    border-color: #007BFF;
+    outline: none;
 }
 
-table{
+table {
     text-align: center;
     width: 100%;
 }
-table, th, td {
+
+table,
+th,
+td {
     border-bottom: 1px solid #d6d3d35c;
     border-collapse: collapse;
     padding: 10px;
 }
-table thead tr{
+
+table thead tr {
     background-color: #007BFF;
 }
-table thead tr :first-child{
+
+table thead tr :first-child {
     border-radius: 10px 0 0 0;
 }
-table thead tr :last-child{
+
+table thead tr :last-child {
     border-radius: 0 10px 0 0;
 }
-table tbody tr:hover{
+
+table tbody tr:hover {
     background-color: #424242;
     cursor: pointer;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+}
+
+.overlay.active {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #333333dc;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    display: none;
+}
+
+.table {
+    height: 250px;
+    overflow: auto;
+}
+.history-order{
+    width: 100%;
+}
+.detail-order {
+    background-color: #222;
+    width: 80%;
+    max-width: 900px;
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 80%;
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+.design-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.design {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.timeline-content {
+    padding: 20px;
+    background: #1f1f1f;
+    box-shadow: 5px 5px 10px #1a1a1a, -5px -5px 10px #242424;
+    border-radius: 5px;
+    color: white;
+    transition: 0.4s ease;
+    overflow-wrap: break-word !important;
+    margin-bottom: 20px;
+    border-radius: 6px;
+}
+
+.timeline-component {
+    margin: 0px 20px 20px 20px;
+    background-color: #333;
+    border: 1px solid #424242;
+}
+.item-history{
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    justify-content: center;
+}
+.detail-item-history{
+    font-weight: 300;
+}
+.detail-item-history h3{
+    font-weight: 400;
+}
+.timeline-component:first-child {
+    background-color: red;
+}
+.detail-distributor-contact{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.personal-information-distributor{
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.history-order,.map-order{
+    padding: 20px;
+    border-bottom: 1px solid #424242;
+    width: 80%;
+}
+.state-order, .details-order, .personal-information-distributor{
+    display: flex;
+    width: 80%;
+    flex-wrap: wrap;
+    padding: 40px 0;
+    border-bottom: 1px solid #424242;
+    gap :2em;
+    justify-content: space-between;
+}
+.map-order{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+}
+.map-order img{
+    width: 400px;
+}
+.item-state{
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+.details-order{
+    flex-direction: column;
+}
+.item-state svg{
+    font-size: 1.5em;
+}
+.detail-item-state{
+    display: flex;
+    flex-direction: column  ;
+    font-weight: 300;
+    gap: 3px;
+}
+.detail-order button{
+    margin-top: 40px;
+}
+@media screen and (min-width: 768px) {
+    .timeline {
+        display: grid;
+        grid-template-columns: 10px 1px 1fr;
+        align-items: center;
+    }
+
+    .timeline-middle {
+        position: relative;
+        background-image: linear-gradient(135deg, #007BFF, #0062ff);
+        width: .6px;
+        height: 100%;
+    }
+
+    .main-middle {
+        opacity: 0;
+    }
+
+    .timeline-circle {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-image: linear-gradient(135deg, #007BFF, #1454eb);
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
 }

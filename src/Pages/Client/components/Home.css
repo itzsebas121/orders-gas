@@ -3,11 +3,14 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "new-order current-order";
-    padding: 10px;
+    gap: 2em;
+    padding: 10px 30px;
 }
 .current-order{
     grid-area: current-order;
 }
 .new-order{
     grid-area: new-order;
+    padding: 0;
+    height:666px;
 }
