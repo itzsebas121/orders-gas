@@ -79,6 +79,27 @@ app.get('/ClientOrders/:id', async (req, res) => {
     }
 
 });
+app.get('/OrderDetails/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        await sql.connect(config);
+        const result = await sql.query`select * from vwOrdersDetails where OrderId = ${id};`;
+        const order = result.recordset[0];
+        if (typeof order.OrderDetails === 'string') {
+            try {
+                order.OrderDetails = JSON.parse(order.OrderDetails);
+            } catch (parseError) {
+                order.OrderDetails = [];
+            }
+        }
+        res.status(200).json(order);
+    } catch (err) {
+        console.log(err);
+    } finally {
+        await sql.close();
+    }
+
+})
 app.listen(port, () => {
     console.log(`Server ready on http://localhost:${port}`);
 });

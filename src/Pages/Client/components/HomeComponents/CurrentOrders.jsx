@@ -39,6 +39,7 @@ const CurrentOrders = (props) => {
 
     const OrderList = orders.map(order => (
         <CurrentOrder
+            key={order.OrderID}
             onSendValue={handleOrderId}
             OrderId={order.OrderID}
             Status={order.OrderStatus}

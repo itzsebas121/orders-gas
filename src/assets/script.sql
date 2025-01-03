@@ -15,6 +15,7 @@ CREATE TABLE Clients (
     LastName NVARCHAR(100) NOT NULL,
     Location NVARCHAR(255),
     Username NVARCHAR(100)  NOT NULL UNIQUE, 
+    PhoneNumber Decimal(10,0) NOT NULL,
     FOREIGN KEY (Username) REFERENCES Users(Username)
         ON DELETE CASCADE 
 );
@@ -25,6 +26,7 @@ CREATE TABLE Distributors (
     Name NVARCHAR(100) NOT NULL,
     LastName NVARCHAR(100) NOT NULL,
     Username NVARCHAR(100) NOT NULL UNIQUE, 
+    PhoneNumber Decimal(10,0) NOT NULL,
     FOREIGN KEY (Username) REFERENCES Users(Username)
         ON DELETE CASCADE 
 );
@@ -81,6 +83,7 @@ CREATE OR ALTER PROCEDURE InsertClient
     @LastName NVARCHAR(100),
     @Location NVARCHAR(255),
     @UserName NVARCHAR(100),
+    @PhoneNumber Decimal(10,0),
     @HashedPassword NVARCHAR(100)
 AS
 BEGIN
@@ -94,8 +97,8 @@ BEGIN
         INSERT INTO Users (UserType, Username, HashedPassword)
         VALUES ('Client', @UserName, @EncryptedPassword);
 
-        INSERT INTO Clients (Name, LastName, Location, Username)
-        VALUES (@Name, @LastName, @Location, @UserName);
+        INSERT INTO Clients (Name, LastName, Location, Username, PhoneNumber)
+        VALUES (@Name, @LastName, @Location, @UserName, @PhoneNumber);
 
         COMMIT TRANSACTION;
     END TRY
@@ -116,7 +119,8 @@ CREATE OR ALTER PROCEDURE InsertDistributor
     @Name NVARCHAR(100),
     @LastName NVARCHAR(100),
     @UserName NVARCHAR(100),
-    @HashedPassword NVARCHAR(100)
+    @HashedPassword NVARCHAR(100),
+    @PhoneNumber Decimal(10,0)
 AS
 BEGIN
     BEGIN TRY
@@ -129,8 +133,8 @@ BEGIN
         INSERT INTO Users (UserType, Username, HashedPassword)
         VALUES ('Distributor', @UserName, @EncryptedPassword);
 
-        INSERT INTO Distributors (Name, LastName, Username)
-        VALUES (@Name, @LastName,  @UserName);
+        INSERT INTO Distributors (Name, LastName, Username, PhoneNumber)
+        VALUES (@Name, @LastName,  @UserName, @PhoneNumber);
 
         COMMIT TRANSACTION;
     END TRY
@@ -149,8 +153,7 @@ BEGIN
 END;
 GO
 
-EXEC InsertClient @Name = 'sebas', @LastName = 'Tipan', @Location='Quero',  @UserName = 'itzsebas121', @HashedPassword = 'xdsebas12';
-EXEC InsertDistributor @Name = 'distribuidor1', @LastName = 'Lopez',  @UserName = 'dis1', @HashedPassword = 'distribuidor1';
+EXEC InsertClient @Name = 'sebas', @LastName = 'Tipan', @Location='Quero',  @UserName = 'itzsebas121', @HashedPassword = 'xdsebas12' @PhoneNumber='1234567890';
 
 GO
 
@@ -288,3 +291,22 @@ exec Insert_Order
     @OrderStatus ='Cancelado',
     @Location='Quero',
 	 @Location_Geographic ='-4545454,-4545'
+
+Create view vwOrdersDetails as
+SELECT 
+    o.OrderID, 
+    o.ClientID, 
+    o.OrderDate, 
+    o.OrderStatus, 
+    o.Location, 
+    o.Location_Delivery, 
+    o.Total AS OrderTotal, 
+    od.OdId, 
+    od.Cylinder, 
+    od.Quantity, 
+    od.Total AS DetailTotal
+FROM 
+    Orders o
+JOIN 
+    Orders_details od ON o.OrderID = od.OrderID
+
