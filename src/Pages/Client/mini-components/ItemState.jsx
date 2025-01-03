@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocation, faClock, faCalendar, faUser} from "@fortawesome/free-solid-svg-icons";
+import './styles.css'
 const ItemState = (props) => {
     const { typeIcon, title, value} = props;
     return (

@@ -1,0 +1,190 @@
+.container-summary,
+.history-content {
+    display: flex;
+    border: 1px solid #434343;
+    padding: 25px;
+    border-radius: 10px;
+    flex-direction: column;
+}
+
+.items-history {
+    display: flex;
+    padding: 30px 10px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 2em;
+}
+
+.history-content {
+    height: 400px;
+    overflow-y: auto;
+}
+
+.title-summary {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+.title-summary b {
+    font-weight: 500;
+}
+
+.items-summary {
+    width: 100%;
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.search-history {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "input-search cmb-search";
+    position: sticky;
+    top: 0;
+}
+
+.input-search,
+.cmb-search-container {
+    display: flex;
+    justify-content: center;
+}
+
+.input-search {
+    align-items: center;
+    grid-area: input-search;
+}
+
+.cmb-search-container {
+    grid-area: cmb-search;
+}
+
+.input-search input {
+    width: 80%;
+    padding: 10px 20px;
+    border-radius: 10px 0 0 10px;
+    font-size: 14px;
+    background-color: #434343;
+    border: none;
+    color: #fff;
+}
+
+.input-search svg {
+    color: #fff;
+    background-color: #007BFF;
+    padding: 11px;
+    border-radius: 0 10px 10px 0;
+}
+
+.input-search input:focus {
+    outline: #007BFF 1px solid;
+}
+
+.history-contenttory-content {
+    margin-top: 2em;
+}
+
+.cmb-search-container select {
+    width: 80%;
+    padding: 10px 20px;
+    border: 1px solid #007BFF;
+    background-color: #434343;
+    border-radius: 10px;
+}
+
+.cmb-search-container select:focus {
+    outline: #007BFF 1px solid;
+}
+
+.card-history {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #434343;
+    box-shadow: 1px 2px 5px #0f87ef74;
+    width: 250px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+
+.card-header h3 {
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.card-header p {
+    border-radius: 15px;
+    font-size: .9em;
+    padding: 3px 10px;
+    transition: all .3s ease;
+}
+.card-header p:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.entregado {
+    background-color: rgb(187 247 208);
+    color: rgb(22 101 52);
+}
+
+.en-camino {
+    background-color: rgb(191 219 254);
+    color: rgb(30 64 175);
+}
+
+.cancelado {
+    background-color: rgb(254 242 242);
+    color: rgb(153 27 27);
+}
+
+.pendiente {
+    background-color: rgb(254 240 138);
+    color: rgb(133 77 14);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+
+.date {
+    font-weight: bold;
+    color: #ccc;
+}
+
+.section-title {
+    margin-top: 15px;
+    text-transform: uppercase;
+    color: #007BFF;
+    font-size: 1.1rem;
+}
+
+.tank-list {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 5px;
+}
+
+.tank-list li {
+    margin: 5px 0;
+}
+
+.address {
+    font-style: italic;
+    color: #ccc;
+}
+
+.total {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #d9534f;
+}

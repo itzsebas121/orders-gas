@@ -1,13 +1,46 @@
 :root{
     color-scheme: light dark;
 }
+.home{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "new-order current-order";
+    gap: 2em;
+    padding: 10px 30px;
+}
+.current-order{
+    grid-area: current-order;
+}
+.new-order{
+    grid-area: new-order;
+    padding: 0;
+    height:666px;
+    background-color: #333;
+    border-radius: 10px;
+    border: 1px solid #424242;
+}
+
 .container-dashboard{
     display: flex;
-    width: 100%;
     height: 100vh;
-    z-index: 10;
-    align-items: start;
     background-color: #222;
     padding: 20px 10px;
-    justify-content: center;
+}
+.record-client{
+    background-color: #333;
+    display: flex;
+    width: 100%;
+    height: 650px;
+    flex-direction: column;
+    margin: 10px 30px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #434343;
+    gap: 1.1em;
+}
+.record-client h1{
+    text-align: center;
+    font-size: 2em;
+    padding: 15px;
 }

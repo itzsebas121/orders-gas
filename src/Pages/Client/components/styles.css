@@ -11,16 +11,7 @@
     border: 1px#424242 solid;
 }
 
-.card {
-    display: flex;
-    justify-content: space-between;
-    padding: 30px;
-    border: 1px #d6d3d35c solid;
-    align-items: center;
-    border-radius: 15px;
-    gap: 2em;
-    background-color: #333;
-}
+
 
 button {
     width: 150px;
@@ -38,9 +29,7 @@ button {
     flex-direction: column;
     gap: 1.5em;
     padding: 2em;
-    border: 1px solid #424242;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .columns-form {
@@ -239,23 +228,14 @@ thead {
 .map-order img{
     width: 400px;
 }
-.item-state{
-    display: flex;
-    gap: 1em;
-    align-items: center;
-}
+
 .details-order{
     flex-direction: column;
 }
 .item-state svg{
     font-size: 1.5em;
 }
-.detail-item-state{
-    display: flex;
-    flex-direction: column  ;
-    font-weight: 300;
-    gap: 3px;
-}
+
 .detail-order button{
     margin-top: 40px;
 }

@@ -1,20 +1,24 @@
 import React from 'react'
+import './styles.css'
 function CurrentOrder(props) {
-    const {onSendValue, OrderId, Status, Price} = props
+    const { onSendValue, OrderId, Status, location, Price } = props
 
-    const sendOrderId =()=>{
+    const sendOrderId = () => {
         onSendValue(OrderId)
     }
     return (
         <div className='current-order'>
-            <div className="card">
-                <div>
-                <strong>Id pedido: </strong>{OrderId}<br />
-                <strong>Estado: </strong> {Status} <br />
-                <strong>Valor: </strong> {Price}
+            <div className="card-content">
+                <div className="card-header-order">
+                    <p><b>Id pedido:</b> {OrderId} </p>
+                    {Status === 'Pendiente' && <p className='parrafo p-pendiente'>{Status} </p>}
+                    {Status === 'En Camino' && <p className='parrafo p-en-camino'>{Status} </p>}
                 </div>
-                <button onClick={sendOrderId}>Ver pedido</button>
+
+                <p><b>Lugar de entrega:</b> </p> {location} <br />
+                <p><b>Total:</b> </p> {Price}
             </div>
+            <button onClick={sendOrderId} className="btn">Ver pedido</button>
         </div>
     );
 }

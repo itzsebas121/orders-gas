@@ -29,29 +29,38 @@ CREATE TABLE Distributors (
         ON DELETE CASCADE 
 );
 CREATE TABLE Cylinders (
-    CylinderID INT PRIMARY KEY IDENTITY,
+    CylinderID INT PRIMARY KEY IDENTITY(1,1),
     TypeCylinder NVARCHAR(50) NOT NULL,
-    Quantity INT NOT NULL
+    Price float NOT NULL
 );
-CREATE TABLE Orders (
+CREATE or alter TABLE Orders (
     OrderID INT PRIMARY KEY IDENTITY(1,1), 
     ClientID INT NOT NULL,
     DistributorID INT NULL,
     OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
-    OrderStatus NVARCHAR(50) NOT NULL,
-    Cylinder INT NOT NULL,
-    Quantity INT NOT NULL,
+    OrderStatus NVARCHAR(50) NOT NULL CHECK (OrderStatus IN ('Pendiente', 'En Camino', 'Entregado', 'Cancelado')),
     Location NVARCHAR(255),
+    Location_Delivery NVARCHAR(255),
     Total FLOAT NULL,
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) 
         ON DELETE CASCADE,
     FOREIGN KEY (DistributorID) REFERENCES Distributors(DistributorID)
         ON DELETE NO ACTION,
+);
+
+GO
+CREATE TABLE Orders_details (
+    OdId INT PRIMARY KEY IDENTITY(1,1), 
+    OrderID INT NOT NULL,
+    Cylinder INT NOT NULL,
+    Quantity INT NOT NULL,
+    Total FLOAT NULL,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) 
+        ON DELETE CASCADE,
     FOREIGN KEY (Cylinder) REFERENCES Cylinders(CylinderID)
         ON DELETE NO ACTION
 );
 
-GO
 CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'proyecto';
 GO
 
@@ -224,3 +233,58 @@ BEGIN CATCH
 END CATCH;
 GO
 EXEC GetUserInfo @Username = 'itzsebas121', @Password = 'xdsebas12';
+
+
+
+CREATE or alter PROCEDURE Insert_Detail_Order
+    @Order_ID int,
+	@Cylinder_id int,
+	@Quantiti_cylinders int
+AS
+BEGIN
+	DECLARE @Price_cylinder float;
+	DECLARE @TotalOrderDetail float;
+
+
+	SELECT @Price_cylinder = Price
+	from Cylinders
+	where CylinderID = @Cylinder_id;
+	
+
+	SET @TotalOrderDetail = @Price_cylinder * @Quantiti_cylinders;
+
+    INSERT INTO Orders_details(OrderID, Cylinder,Quantity, Total)
+	values (@Order_ID, @Cylinder_id, @Quantiti_cylinders,@TotalOrderDetail );
+
+	update orders
+	set Total = Total + @TotalOrderDetail
+	where OrderID = @Order_ID;
+END;
+
+
+EXEC Insert_Detail_Order
+    @Order_ID = 1, 
+    @Cylinder_id = 1,
+    @Quantiti_cylinders = 3; 
+
+
+CREATE or alter PROCEDURE Insert_Order
+    @ClientID INT,
+    @DistributorID INT,
+    @OrderStatus NVARCHAR(50),
+    @Location NVARCHAR(255),
+	 @Location_Geographic NVARCHAR(250)
+AS
+BEGIN
+    Declare @NewOrderID INT;
+    INSERT INTO Orders (ClientID, DistributorID, OrderStatus, Location, Location_Delivery, Total)
+    VALUES (@ClientID, @DistributorID, @OrderStatus, @Location,@Location_Geographic, 0);
+    SET @NewOrderID = SCOPE_IDENTITY();
+    select @NewOrderID as NewOrderID;
+END;
+exec Insert_Order
+    @ClientID =1,
+    @DistributorID =1,
+    @OrderStatus ='Cancelado',
+    @Location='Quero',
+	 @Location_Geographic ='-4545454,-4545'

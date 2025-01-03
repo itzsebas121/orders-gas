@@ -50,13 +50,15 @@ button {
   cursor: pointer; 
   transition: background-color 0.3s; 
   margin: 0 auto;
+  transition: all 0.2s ease-in-out; 
 }
 
 button:hover {
   background-color: #0056b3;
+  transform: scale(1.1);
 }
 ::-webkit-scrollbar{
-  width: 10px;
+  width: 5px;
 }
 ::-webkit-scrollbar-thumb{
   border-radius: 200px;

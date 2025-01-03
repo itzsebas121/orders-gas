@@ -20,7 +20,7 @@ const NavigatorBar = () => {
                         <NavLink to={"/Client/Home"} className={`${isActive('/Client/Home') ? 'item active' : 'item'}`} ><p><FontAwesomeIcon icon={faHome} />Inicio</p></NavLink>
                     </li>
                     <li>
-                        <NavLink to={"/Client/Record"} className={isActive('/Client/Record') ? 'item active' : 'item'} > <p ><FontAwesomeIcon icon={faClockRotateLeft} />Historial</p> </NavLink>
+                        <NavLink to={"/Client/History"} className={isActive('/Client/History') ? 'item active' : 'item'} > <p ><FontAwesomeIcon icon={faClockRotateLeft} />Historial</p> </NavLink>
 
                     </li>
                 </ul>

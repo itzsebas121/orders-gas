@@ -1,5 +1,4 @@
 import React, { useState, lazy, Suspense } from "react";
-import './Home.css'
 import './styles.css'
 const DetailOrder = lazy(() => import("./HomeComponents/DetailOrder"));
 const CurrentOrders = lazy(() => import("./HomeComponents/CurrentOrders"));

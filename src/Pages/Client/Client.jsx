@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom'
 import Loading from '../../components/Loading'
 
 const Home = lazy (()=> import('./components/Home'))
-const Record = lazy(() => import('./components/Record'))
+const History = lazy(() => import('./components/History'))
 const Client = () => {
   return (
     <div className='container'>
@@ -15,7 +15,7 @@ const Client = () => {
           <Routes>
             <Route index element={<Home />} />
             <Route path='/Home' element={<Home />} />
-            <Route path='/Record' element={<Record />} />
+            <Route path='/History' element={<History />} />
           </Routes>
 
         </div>

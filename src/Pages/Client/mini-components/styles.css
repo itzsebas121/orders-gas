@@ -1,0 +1,34 @@
+.item-state{
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+.detail-item-state{
+    display: flex;
+    flex-direction: column  ;
+    font-weight: 300;
+    gap: 3px;
+}
+.item-state svg{
+    font-size: 1.5em;
+}
+.item-summary{
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+.item-summary svg{
+    font-size: 1.3em;
+}
+.content-summary{
+    display: flex;
+    flex-direction: column;    
+    text-align: center;
+}
+.content-summary p{
+    font-size: 3em;
+    font-weight: 600;
+}
+.content-summary h4{
+    font-weight: 400;
+}

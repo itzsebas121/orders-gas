@@ -1,0 +1,32 @@
+.card-header-order{
+    display: flex;
+    justify-content: space-between;
+}
+.current-order{
+    border: 1px #424242 solid;
+    width: 80%;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+.parrafo{
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.parrafo:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+.p-en-camino {
+    background-color: rgb(191 219 254);
+    color: rgb(30 64 175);
+}
+
+
+.p-pendiente {
+    background-color: rgb(254 240 138);
+    color: rgb(133 77 14);
+}
