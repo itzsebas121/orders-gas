@@ -1,42 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import HistoryItem from "./HistoryItem";
 const HistoryContent = () => {
-    const history = [
-        {
-            id: 1,
-            status: 'Entregado',
-            date: '2023-06-01',
-            detail_order: [{ cantidad: 2, producto: 'Gas Domestico' }, { cantidad: 2, producto: 'Gas Industrial' }],
-            location: 'Calle 123, Ciudad, País',
-            total: 100.00
-        },
-        {
-            id: 2,
-            status: 'En Camino',
-            date: '2023-05-25',
-            detail_order: [{ cantidad: 2, producto: 'Gas Domestico' }, { cantidad: 2, producto: 'Gas Industrial' }],
-            location: 'Calle 456, Ciudad, País',
-            total: 150.00
-        },
-        {
-            id: 3,
-            status: 'Cancelado',
-            date: '2023-05-25',
-            detail_order: [{ cantidad: 2, producto: 'Gas Domestico' }, { cantidad: 2, producto: 'Gas Industrial' }],
-            location: 'Calle 456, Ciudad, País',
-            total: 130.00
-        },{
-            id: 4,
-            status: 'Pendiente',
-            date: '2023-05-25',
-            detail_order: [{ cantidad: 2, producto: 'Gas Domestico' }, { cantidad: 2, producto: 'Gas Industrial' }],
-            location: 'Calle 456, Ciudad, País',
-            total: 130.00
-        }
-    ]
+
+    const [OrdersHistory, setOrdersHistory] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/ClientHistoryOrders/${1}`)
+            .then(response => response.json())
+            .then(data => {
+                setOrdersHistory(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error al obtener los detalles del pedido:', error);
+                setIsLoading(false);
+            });
+    }, []);
+    if (isLoading) {
+        return <div>Cargando...</div>;
+    }
+
+    const OrderList = OrdersHistory.map((item, index) => (
+
+        <HistoryItem key={item.OrderID} id={item.OrderID}
+        status={item.OrderStatus}
+        date={item.OrderDate}
+        detail_order={item.OrderDetails}
+        location={item.Location} total={item.OrderTotal} />
+    ))
     return (
         <div className="history-content">
             <div className="search-history">
@@ -54,15 +49,7 @@ const HistoryContent = () => {
                 </div>
             </div>
             <div className="items-history">
-                {
-                    history.map((item, index) => (
-                        <HistoryItem key={item.id} id={item.id} 
-                        status={item.status} 
-                        date={item.date} 
-                        detail_order={item.detail_order} 
-                        location={item.location} total={item.total} />
-                    ))
-                }
+                {OrderList}
             </div>
         </div>
     );

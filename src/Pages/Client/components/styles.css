@@ -249,7 +249,7 @@ thead {
     .timeline-middle {
         position: relative;
         background-image: linear-gradient(135deg, #007BFF, #0062ff);
-        width: .6px;
+        width: 1px;
         height: 100%;
     }
 

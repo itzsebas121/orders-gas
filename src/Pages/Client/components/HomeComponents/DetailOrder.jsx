@@ -34,7 +34,6 @@ const DetailOrder = (props) => {
     return (
       <div className="overlay active">
         <div className="detail-order">
-
           <Loading />
         </div>
       </div>
@@ -44,12 +43,12 @@ const DetailOrder = (props) => {
   return (
     <div className="overlay active">
       <div className="detail-order">
-        <h2>Seguimiento del pedido: {OrderId}</h2>
+        <h2>Seguimiento del pedido {OrderId}</h2>
 
         <div className="detail-distributor-contact">
           <div className="personal-information-distributor">
             <Suspense fallback={<div>Loading...</div>}>
-              <ItemState typeIcon={"user"} title={Orders.Name + ' ' + Orders.LastName} value={'+593 ' + Orders.phonenumber} />
+              <ItemState typeIcon={"user"} title={Orders.Name.toUpperCase() + ' ' + Orders.LastName.toUpperCase()} value={'+593 ' + Orders.phonenumber} />
             </Suspense>
           </div>
 
@@ -64,8 +63,8 @@ const DetailOrder = (props) => {
 
         <div className="details-order">
           <h3>Detalles del pedido</h3>
-          <div className="table">
-            <table>
+          <div className="table" style={{height: '120px'}}>
+            <table >
               <thead>
                 <tr>
                   <th>Tipo Gas</th>

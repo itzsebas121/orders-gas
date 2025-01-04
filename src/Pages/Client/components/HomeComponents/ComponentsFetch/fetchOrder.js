@@ -1,5 +1,5 @@
 const fetchOrders = async () => {
-    const response = await fetch(`http://localhost:3000/ClientOrders/${1}`);
+    const response = await fetch(`http://localhost:3000/ClientCurrentOrders/${1}`);
     const data = await response.json();
 
     if (Array.isArray(data)) {

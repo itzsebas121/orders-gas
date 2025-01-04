@@ -1,70 +1,121 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import NewOrder from './NewOrder';
+import DetailOrder from '../components/HomeComponents/DetailOrder';
 const Form = () => {
-    var detailsOrder = []
+    const [cylinders, setCylinders] = useState([])
+    const [overlay, setOverlay] = useState(false);
+    const [detailOrder, setDetailOrder] = useState([]);
+    const handlePrice = (e) => {
+
+        document.getElementById('price').value = e.target.options[e.target.selectedIndex].getAttribute('data-price')
+    }
+    useEffect(() => {
+        fetch('http://localhost:3000/getCylinders')
+            .then(res => res.json())
+            .then(data => setCylinders(data))
+    }, [])
+    const newOrder = [{
+        "ClientID": 1,
+        "Location": "San Salvador",
+        'Location_Geographic': '-1.387004, -78.600372',
+    }
+    ]
     const handleOrderObject = () => {
-        const cantidad = document.getElementById('cantidad')
         const cylinder = document.getElementById('tipoCilindro')
-        const detailOrder = { typeCylinder: cylinder.value, quantity: cantidad.value }
-        detailsOrder.push(detailOrder)
+        const cantidad = document.getElementById('cantidad').value
+        const price = document.getElementById('price').value
+        if (price === '') {
+            alert('Seleeccione un cilindro')
+            return
+        } else if (cantidad === '') {
+            alert('Ingrese la cantidad')
+            return
+        }
+        const detailOrder2 = { OrderID:0, cylinder_id: cylinder.value, quantity: cantidad }
+        const OrderDetails = []
+        detailOrder.map(item => {
+            OrderDetails.push(item)
+        })
+        OrderDetails.push(detailOrder2)
+        setDetailOrder(OrderDetails)
+
         const tbody = document.getElementById('table-body');
         const row = document.createElement('tr')
-        row.innerHTML = `<td>${cylinder.options[cylinder.selectedIndex].text}</td><td>${cantidad.value}</td><td>$2</td> <td>$${cantidad.value * 2}</td>`
-        console.log(detailsOrder)
+        row.innerHTML = `<td>${cylinder.options[cylinder.selectedIndex].text}</td><td>${cantidad}</td><td>$ ${price}</td> <td>$${cantidad * price}</td>`
         tbody.appendChild(row)
     }
+    const handleSubmit = () => {
+        setOverlay(true)
+    }
+    const hiddenOverlay = (value) => {
+        setOverlay(value)
+    }
     return (
-        <form className="formOrder">
-            <h1>Nuevo Pedido</h1>
-            <div className="columns-form">
-                <div className="input-form">
-                    <label>Tipo de Cilindro:</label>
-                    <select id="tipoCilindro" name="tipoCilindro" required>
-                        <option value="" hidden>Seleccione el tipo</option>
-                        <option value="1">Gas Industrial</option>
-                        <option value="2">Gas Domestico</option>
-                    </select>
-                </div>
-                <div className="input-form">
-                    <label >Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" min="1" max="100" required />
-                </div>
-            </div>
+        <>
+            <form className="formOrder">
+                <h1>Nuevo Pedido</h1>
+                <div className="columns-form">
+                    <div className="input-form">
+                        <label>Tipo de Cilindro:</label>
+                        <select id="tipoCilindro" name="tipoCilindro" required onChange={handlePrice}>
+                            <option value="" hidden>Seleccione un cilindro...</option>
+                            {
+                                cylinders.map(cylinder => (
 
-            <div className="columns-form">
-                <div className="input-form">
-                    <label >Ubicación:</label>
-                    <input type="text" id="ubicacion" name="ubicacion" placeholder="Ingrese la dirección" required />
-                </div>
-                <div className="input-form">
-                    <label >Precio:</label>
-                    <input type="number" id="ubicacion" name="ubicacion" placeholder="Seleccione un cilindro" disabled />
+                                    <option key={cylinder.CylinderID} value={cylinder.CylinderID} data-price={cylinder.Price}>{cylinder.TypeCylinder} </option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                    <div className="input-form">
+                        <label >Precio:</label>
+                        <input type="number" id="price" name="price" placeholder="Seleccione un cilindro" disabled />
+
+                    </div>
                 </div>
 
-            </div>
-            <div className="columns-form">
-                <div className="input-form">
-                    <label >Agregar:</label>
-                    <button type='button' onClick={handleOrderObject}>+</button>
-                </div>
-            </div>
-            <div className="table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tipo Gas</th>
-                            <th>Cantidad</th>
-                            <th>Precio Unitario</th>
-                            <th>Subtotal</th>
-                        </tr>
+                <div className="columns-form">
+                    <div className="input-form">
+                        <label >Ubicación:</label>
+                        <input type="text" id="ubicacion" name="ubicacion" value="Av. 17 de abril" readOnly />
+                    </div>
+                    <div className="input-form">
+                        <label>Cambiar</label>
+                        <button style={{ width: '100%' }} type='button'>Cambiar ubicacion</button>
+                    </div>
 
-                    </thead>
-                    <tbody id='table-body'>
-                    </tbody>
-                </table>
-            </div>
-            <label >Total</label>
-            <button>Hacer Pedido</button>
-        </form>
+                </div>
+                <div className="columns-form">
+                    <div className="input-form">
+                        <label >Cantidad:</label>
+                        <input type="number" id="cantidad" name="cantidad" min="1" max="100" required placeholder='Ingrese la cantidad' />
+                    </div>
+                    <div className="input-form">
+                        <label >Agregar:</label>
+                        <button type='button' onClick={handleOrderObject}>+</button>
+                    </div>
+                </div>
+                <div className="table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo Gas</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+
+                        </thead>
+                        <tbody id='table-body'>
+                        </tbody>
+                    </table>
+                </div>
+                <label >Total</label>
+                <button type='button' onClick={handleSubmit}>Hacer Pedido</button>
+            </form>
+            {overlay && <NewOrder hidden={hiddenOverlay} newOrder={newOrder[0]} OrderDetail={detailOrder}></NewOrder>}
+        </>
+
     );
 }
 export default Form;

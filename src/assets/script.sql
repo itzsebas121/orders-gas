@@ -273,22 +273,18 @@ EXEC Insert_Detail_Order
 
 CREATE or alter PROCEDURE Insert_Order
     @ClientID INT,
-    @DistributorID INT,
-    @OrderStatus NVARCHAR(50),
     @Location NVARCHAR(255),
-	 @Location_Geographic NVARCHAR(250)
+	@Location_Geographic NVARCHAR(250)
 AS
 BEGIN
     Declare @NewOrderID INT;
-    INSERT INTO Orders (ClientID, DistributorID, OrderStatus, Location, Location_Delivery, Total)
-    VALUES (@ClientID, @DistributorID, @OrderStatus, @Location,@Location_Geographic, 0);
+    INSERT INTO Orders (ClientID , OrderStatus,Location,  Location_Delivery, Total)
+    VALUES (@ClientID, 'Pendiente', @Location,@Location_Geographic, 0);
     SET @NewOrderID = SCOPE_IDENTITY();
     select @NewOrderID as NewOrderID;
 END;
 exec Insert_Order
     @ClientID =1,
-    @DistributorID =1,
-    @OrderStatus ='Cancelado',
     @Location='Quero',
 	 @Location_Geographic ='-4545454,-4545'
 
