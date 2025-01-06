@@ -164,6 +164,24 @@ app.post('/InsertDetails/:id', async (req, res) => {
         res.status(500).json({ message: 'Error al crear el pedido' });
     }
 });
+app.get('/getSummaryOrder/:clientid', async (req, res) => {
+    const clientid = req.params.clientid;
+    try {
+        const result = await pool.request().query`select * from vwSummaryClient where ClientID = ${clientid}`;
+        res.status(200).json(result.recordset);
+    } catch (err) {
+        console.log(err);
+    }   
+});
+app.get('/getStatusOrder/:orderid', async (req, res) => {
+    const orderid = req.params.orderid;
+    try {
+        const result = await pool.request().query`select * from DetailStatus where OrderID = ${orderid}`;
+        res.status(200).json(result.recordset);
+    } catch (err) {
+        console.log(err);
+    }
+}); 
 process.on('SIGINT', async () => {
     if (pool) {
         await pool.close();

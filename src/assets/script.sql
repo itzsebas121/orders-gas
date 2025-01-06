@@ -35,21 +35,31 @@ CREATE TABLE Cylinders (
     TypeCylinder NVARCHAR(50) NOT NULL,
     Price float NOT NULL
 );
-CREATE or alter TABLE Orders (
-    OrderID INT PRIMARY KEY IDENTITY(1,1), 
-    ClientID INT NOT NULL,
-    DistributorID INT NULL,
-    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
-    OrderStatus NVARCHAR(50) NOT NULL CHECK (OrderStatus IN ('Pendiente', 'En Camino', 'Entregado', 'Cancelado')),
-    Location NVARCHAR(255),
-    Location_Delivery NVARCHAR(255),
-    Total FLOAT NULL,
-    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) 
-        ON DELETE CASCADE,
-    FOREIGN KEY (DistributorID) REFERENCES Distributors(DistributorID)
-        ON DELETE NO ACTION,
-);
+CREATE TABLE Orders (
+        OrderID INT PRIMARY KEY IDENTITY(1,1), 
+        ClientID INT NOT NULL,
+        DistributorID INT NULL,
+        OrderDate DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AT TIME ZONE 'SA Pacific Standard Time',
+        OrderStatus NVARCHAR(50) NOT NULL CHECK (OrderStatus IN ('Pendiente', 'En Camino', 'Entregado', 'Cancelado')),
+        Location NVARCHAR(255),
+        Location_Delivery NVARCHAR(255),
+        Total FLOAT NULL,
+        FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) 
+            ON DELETE CASCADE,
+        FOREIGN KEY (DistributorID) REFERENCES Distributors(DistributorID)
+            ON DELETE NO ACTION
+    );
 
+GO
+
+
+CREATE TABLE DetailStatus (
+    DetailStatusID INT IDENTITY(1,1) PRIMARY KEY, 
+    OrderID INT NOT NULL,
+    StatusDetail NVARCHAR(255) NOT NULL CHECK (StatusDetail IN ('Pendiente', 'En Camino', 'Entregado', 'Cancelado')),
+    DateUpdate DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AT TIME ZONE 'SA Pacific Standard Time',
+    FOREIGN KEY (OrderID) REFERENCES orders(OrderID)
+);
 GO
 CREATE TABLE Orders_details (
     OdId INT PRIMARY KEY IDENTITY(1,1), 
@@ -265,11 +275,6 @@ BEGIN
 END;
 
 
-EXEC Insert_Detail_Order
-    @Order_ID = 1, 
-    @Cylinder_id = 1,
-    @Quantiti_cylinders = 3; 
-
 
 CREATE or alter PROCEDURE Insert_Order
     @ClientID INT,
@@ -281,28 +286,120 @@ BEGIN
     INSERT INTO Orders (ClientID , OrderStatus,Location,  Location_Delivery, Total)
     VALUES (@ClientID, 'Pendiente', @Location,@Location_Geographic, 0);
     SET @NewOrderID = SCOPE_IDENTITY();
+	INSERT INTO DetailStatus VALUES ( @NewOrderID, 'Pendiente');
     select @NewOrderID as NewOrderID;
+
 END;
-exec Insert_Order
-    @ClientID =1,
-    @Location='Quero',
-	 @Location_Geographic ='-4545454,-4545'
 
-Create view vwOrdersDetails as
+EXEC Insert_Detail_Order
+    @Order_ID = 1, 
+    @Cylinder_id = 1,
+    @Quantiti_cylinders = 3; 
+
+
+CREATE VIEW vwOrdersDetails AS  
+SELECT   
+    CASE WHEN o.OrderStatus = 'Pendiente' THEN 'Pedido pendiente' ELSE d.Name END AS Name,  
+    CASE WHEN o.OrderStatus = 'Pendiente' THEN '' ELSE d.LastName END AS LastName,  
+    CASE WHEN o.OrderStatus = 'Pendiente' THEN '000 000 000' ELSE CAST(d.PhoneNumber AS nvarchar(10)) END AS PhoneNumber, 
+    o.OrderID,   
+    o.ClientID,   
+    o.OrderDate,   
+    o.OrderStatus,   
+    o.Location,   
+    o.Location_Delivery,   
+    o.Total AS OrderTotal,   
+    (SELECT   
+        od.OdId,   
+        cy.TypeCylinder,   
+        od.Quantity,   
+        cy.Price,  
+        od.Total AS DetailTotal  
+     FROM Orders_details od  
+     INNER JOIN Cylinders cy ON od.Cylinder = cy.CylinderID  
+     WHERE od.OrderID = o.OrderID  
+     FOR JSON PATH) AS OrderDetails  
+FROM Orders o
+LEFT JOIN Distributors d ON o.DistributorID = d.DistributorID;
+
+
+
+
+
+create  view vwSummaryClient as
 SELECT 
-    o.OrderID, 
-    o.ClientID, 
-    o.OrderDate, 
-    o.OrderStatus, 
-    o.Location, 
-    o.Location_Delivery, 
-    o.Total AS OrderTotal, 
-    od.OdId, 
-    od.Cylinder, 
-    od.Quantity, 
-    od.Total AS DetailTotal
-FROM 
-    Orders o
-JOIN 
-    Orders_details od ON o.OrderID = od.OrderID
+    c.Name,
+    c.LastName,
+    c.ClientID,
+    COALESCE(COUNT(o.OrderID), 0) AS TotalOrders, 
+    COALESCE(SUM(CASE WHEN o.OrderStatus = 'Entregado' THEN 1 ELSE 0 END), 0) AS PedidosEntregados, 
+    COALESCE(SUM(CASE WHEN o.OrderStatus = 'Entregado' THEN o.Total ELSE 0 END), 0) AS GastoTotal
+FROM Clients c
+LEFT JOIN orders o ON o.ClientID = c.ClientID
+GROUP BY c.ClientID, c.Name, c.LastName;
 
+
+CREATE OR ALTER PROCEDURE SetOrderInTransit
+    @OrderID INT,
+	@DistributorID INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)
+    BEGIN
+
+        UPDATE orders
+SET 
+    OrderStatus = 'En Camino', 
+    DistributorID = @DistributorID, 
+    OrderDate = DATEADD(HOUR, -0, GETUTCDATE())
+WHERE 
+    OrderID = @OrderID;
+
+		INSERT INTO DetailStatus (OrderID, StatusDetail) values ( @OrderID, 'En Camino');
+    END
+    ELSE
+    BEGIN
+        PRINT 'El pedido no existe.';
+    END
+END;
+GO
+
+CREATE OR ALTER PROCEDURE CancelOrder
+    @OrderID INT
+AS
+BEGIN
+
+    IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)
+    BEGIN
+
+        UPDATE orders
+        SET OrderStatus = 'Cancelado' 
+        WHERE OrderID = @OrderID
+		INSERT INTO DetailStatus (OrderID, StatusDetail)  VALUES ( @OrderID, 'Cancelado');
+
+    END
+    ELSE
+    BEGIN
+        PRINT 'El pedido no existe.';
+    END
+END;
+GO
+CREATE OR ALTER PROCEDURE MarkOrderAsDelivered
+    @OrderID INT,
+    @DeliveryDate DATETIME
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)
+    BEGIN
+        UPDATE orders
+        SET OrderStatus = 'Entregado'
+        WHERE OrderID = @OrderID;
+		INSERT INTO DetailStatus (OrderID, StatusDetail)  VALUES ( @OrderID, 'Entregado');
+      
+    END
+    ELSE
+    BEGIN
+        PRINT 'El pedido no existe.';
+    END
+END;
+GO

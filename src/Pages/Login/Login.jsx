@@ -1,22 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import "./Login.css";
 import { useNavigate } from 'react-router-dom'
+const token = localStorage.getItem("token")
+
 const Login = () => {
-    const [user, setUser] = useState('');
-    const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            try {
+                const decodedToken = JSON.parse(atob(token.split(".")[1]));
+
+                if (decodedToken.usertype === "Client") {
+                    navigate("/Client");
+                } else if (decodedToken.usertype === "Distributor") {
+                    navigate("/Distributor");
+                }
+            } catch (error) {
+                console.error("Error al decodificar el token:", error);
+                localStorage.removeItem("token");
+            }
+        }
+    }, [navigate]);
     const handleLogin = (e) => {
         e.preventDefault();
-        const type = 'Client';
-        if (user === 'admin' && password === 'admin') {
-            if(type ==='Client'){
-                navigate('Client');
-            }else if('Distributor'){
-                navigate('Distributor');
+        const user = document.getElementById('user').value;
+        const password = document.getElementById('password').value;
+        fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: user,
+                password: password
+            })
+        }).then(response => response.json()).then(data => {
+            if (data.message) {
+                alert(data.message);
+            } else if (data.token) {
+                
+                localStorage.setItem('token', data.token);
+                const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+                if (decodedToken.usertype == 'Client') {
+                    navigate('/Client');
+                } else if (decodedToken.usertype == 'Distributor') {
+                    navigate('/Distributor');
+                }
             }
-        } else {
-            alert('Credenciales incorrectas');
-        }
+        }).catch(error => console.error('Error:', error))
+
     };
     return (
         <div id="login">
@@ -24,9 +57,9 @@ const Login = () => {
                 <h1>Iniciar Sesión</h1>
                 <p>Ingresa tus credenciales para iniciar sesión</p>
                 <br />
-                <input className='input' type="text" onChange={(e)=>setUser(e.target.value)} placeholder="Ingresa tu usuario" required />
+                <input id="user" className='input' type="text" placeholder="Ingresa tu usuario" required />
                 <br />
-                <input className='input' type="password" onChange={(e)=>setPassword(e.target.value)} placeholder="Ingresa tu contraseña" required />
+                <input id="password" className='input' type="password" placeholder="Ingresa tu contraseña" required />
                 <br />
                 <button>Iniciar Sesión</button>
             </form>

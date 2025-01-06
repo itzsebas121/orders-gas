@@ -5,6 +5,7 @@
     padding: 25px;
     border-radius: 10px;
     flex-direction: column;
+    height: 120px;
 }
 
 .items-history {
@@ -125,6 +126,7 @@
     padding: 3px 10px;
     transition: all .3s ease;
 }
+
 .card-header p:hover {
     transform: scale(1.1);
     cursor: pointer;

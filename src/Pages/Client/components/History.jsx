@@ -4,8 +4,8 @@ import HistoryContent from "./HistoryComponents/HistoryContent";
 const History = () => {
     return (
         <div className="record-client">
-            <HistorySummary></HistorySummary>
-            <HistoryContent/>
+            <HistorySummary OrderId={1}></HistorySummary>
+            <HistoryContent></HistoryContent>
         </div>
     );
 }

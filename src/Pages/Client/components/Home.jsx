@@ -1,15 +1,20 @@
 import React, { useState, lazy, Suspense } from "react";
 import './styles.css'
-import { use } from "react";
+import { useEffect } from "react";
 import Loading from "../../../components/Loading";
 const DetailOrder = lazy(() => import("./HomeComponents/DetailOrder"));
 const CurrentOrders = lazy(() => import("./HomeComponents/CurrentOrders"));
 const NewOrder = lazy(() => import("./HomeComponents/NewOrder"));
+import { useAuth } from "../../../components/Auth";
 const Home = () => {
+    const { verifyToken } = useAuth();
     const [OrderId, setOrderId] = useState("");
     const [overlay, sendOverlay] = useState(false);
-
     
+    useEffect(() => {
+        verifyToken()
+    })
+
     const handleOverlay = (value) => {
         sendOverlay(true)
         setOrderId(value)

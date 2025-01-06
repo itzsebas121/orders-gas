@@ -31,7 +31,7 @@ const Form = () => {
             alert('Ingrese la cantidad')
             return
         }
-        const detailOrder2 = { OrderID:0, cylinder_id: cylinder.value, quantity: cantidad }
+        const detailOrder2 = { OrderID: 0, cylinder_id: cylinder.value, quantity: cantidad }
         const OrderDetails = []
         detailOrder.map(item => {
             OrderDetails.push(item)
@@ -45,6 +45,10 @@ const Form = () => {
         tbody.appendChild(row)
     }
     const handleSubmit = () => {
+        if (detailOrder.length === 0) {
+            alert('Agregue al menos un producto')
+            return
+        }
         setOverlay(true)
     }
     const hiddenOverlay = (value) => {

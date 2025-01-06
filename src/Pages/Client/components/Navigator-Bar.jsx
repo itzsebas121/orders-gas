@@ -6,9 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../../components/Auth";
 const NavigatorBar = () => {
-    const isActive = (path) =>location.pathname === path;
-
+    const { logout } = useAuth();
+    const isActive = (path) => location.pathname === path;
+    
     return (
         <nav className="navigator-bar">
 
@@ -16,7 +19,7 @@ const NavigatorBar = () => {
             <div className="items-nav">
                 <ul>
                     <li>
-                    
+
                         <NavLink to={"/Client/Home"} className={`${isActive('/Client/Home') ? 'item active' : 'item'}`} ><p><FontAwesomeIcon icon={faHome} />Inicio</p></NavLink>
                     </li>
                     <li>
@@ -26,7 +29,8 @@ const NavigatorBar = () => {
                 </ul>
                 <ul>
                     <li>
-                        <NavLink to={"/Client/Profile"} className={isActive('/Client/Profile') ? 'item active' : 'item'}><p><FontAwesomeIcon icon={faUser}/>Perfil</p></NavLink>
+                        <NavLink to={"/Client/Profile"} className={isActive('/Client/Profile') ? 'item active' : 'item'}><p><FontAwesomeIcon icon={faUser} />Perfil</p></NavLink>
+                        <label onClick={logout} className="item"><p><FontAwesomeIcon icon={faDoorOpen} />Cerrar Sesión</p></label>
                     </li>
 
                 </ul>

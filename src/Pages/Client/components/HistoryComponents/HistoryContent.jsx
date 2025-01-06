@@ -20,9 +20,7 @@ const HistoryContent = () => {
                 setIsLoading(false);
             });
     }, []);
-    if (isLoading) {
-        return <div>Cargando...</div>;
-    }
+
 
     const OrderList = OrdersHistory.map((item, index) => (
 

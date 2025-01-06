@@ -8,12 +8,14 @@ const DetailOrder = (props) => {
   const [Orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const formattedDate = Orders.OrderDate ? new Date(Orders.OrderDate).toLocaleString() : '';
-  const AproxDate = Orders.OrderDate ? new Date(Orders.OrderDate) : new Date();
+  const orderDateUTC = new Date(Orders.OrderDate);
+
+  const formattedDate = orderDateUTC.toLocaleString();
+
+  const AproxDate = new Date(orderDateUTC);
 
   const deliveryDate = new Date(AproxDate);
-  deliveryDate.setMinutes(deliveryDate.getMinutes() + 15);
-
+  deliveryDate.setMinutes(deliveryDate.getMinutes() + 20);
   const hiddenOverlay = () => {
     hidden(false);
   }
@@ -22,8 +24,11 @@ const DetailOrder = (props) => {
     fetch(`http://localhost:3000/OrderDetails/${OrderId}`)
       .then(response => response.json())
       .then(data => {
+
         setOrders(data);
         setLoading(false);
+
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -48,14 +53,17 @@ const DetailOrder = (props) => {
         <div className="detail-distributor-contact">
           <div className="personal-information-distributor">
             <Suspense fallback={<div>Loading...</div>}>
-              <ItemState typeIcon={"user"} title={Orders.Name.toUpperCase() + ' ' + Orders.LastName.toUpperCase()} value={'+593 ' + Orders.phonenumber} />
+              <ItemState typeIcon={"user"} title={Orders.Name.toUpperCase() + ' ' + Orders.LastName.toUpperCase()} value={'+593 ' + Orders.PhoneNumber} />
             </Suspense>
           </div>
 
           <div className="state-order">
             <Suspense fallback={<div>Loading...</div>}>
               <ItemState typeIcon={"calendar"} title={"Fecha del pedido"} value={formattedDate} />
-              <ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} value={deliveryDate.toLocaleString()} />
+              {Orders.OrderStatus == 'Cancelado' ? < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} 
+              value={'El pedido feu cancelado o rechazado'} />: 
+              < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} value={deliveryDate.toLocaleString()} /> }
+
               <ItemState typeIcon={"location"} title={"Lugar de entrega"} value={Orders.Location} />
             </Suspense>
           </div>
@@ -63,7 +71,7 @@ const DetailOrder = (props) => {
 
         <div className="details-order">
           <h3>Detalles del pedido</h3>
-          <div className="table" style={{height: '120px'}}>
+          <div className="table" style={{ height: '120px' }}>
             <table >
               <thead>
                 <tr>
@@ -89,7 +97,7 @@ const DetailOrder = (props) => {
         </div>
 
         <div className="history-order">
-          <Timeline />
+          <Timeline OrderId={OrderId} />
         </div>
 
         <div className="map-order">
