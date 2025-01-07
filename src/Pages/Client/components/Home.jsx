@@ -1,19 +1,17 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import './styles.css'
 import { useEffect } from "react";
-import Loading from "../../../components/Loading";
-const DetailOrder = lazy(() => import("./HomeComponents/DetailOrder"));
-const CurrentOrders = lazy(() => import("./HomeComponents/CurrentOrders"));
-const NewOrder = lazy(() => import("./HomeComponents/NewOrder"));
-import { useAuth } from "../../../components/Auth";
-const Home = () => {
-    const { verifyToken } = useAuth();
+import DetailOrder from "./HomeComponents/DetailOrder";
+import CurrentOrders from "./HomeComponents/CurrentOrders";
+import NewOrder from "./HomeComponents/NewOrder";
+const Home = (props) => {
+    const { Client } = props
     const [OrderId, setOrderId] = useState("");
     const [overlay, sendOverlay] = useState(false);
-    
+    const [client, setClient] = useState([])
     useEffect(() => {
-        verifyToken()
-    })
+        setClient(Client)
+    }, [Client])
 
     const handleOverlay = (value) => {
         sendOverlay(true)
@@ -23,13 +21,11 @@ const Home = () => {
         sendOverlay(value)
     }
     return (
-        <Suspense fallback={<Loading></Loading>}>
-            <div className="home">
-                <NewOrder></NewOrder>
-                <CurrentOrders sendOverlayClass={handleOverlay}></CurrentOrders>
-                {overlay && <DetailOrder OrderId={OrderId} hidden={hiddenOverlay}></DetailOrder>}
-            </div>
-        </Suspense>
+        <div className="home">
+            <NewOrder user={client}></NewOrder>
+            <CurrentOrders sendOverlayClass={handleOverlay} user={client} ></CurrentOrders>
+            {overlay && <DetailOrder OrderId={OrderId} hidden={hiddenOverlay} ></DetailOrder>}
+        </div>
     );
 }
 export default Home;

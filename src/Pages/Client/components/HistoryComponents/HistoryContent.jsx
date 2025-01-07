@@ -3,13 +3,13 @@ import './styles.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import HistoryItem from "./HistoryItem";
-const HistoryContent = () => {
-
+const HistoryContent = (props) => {
+    const { Client } = props;
     const [OrdersHistory, setOrdersHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/ClientHistoryOrders/${1}`)
+        fetch(`http://localhost:3000/ClientHistoryOrders/${Client.id}`)
             .then(response => response.json())
             .then(data => {
                 setOrdersHistory(data);
@@ -19,7 +19,7 @@ const HistoryContent = () => {
                 console.error('Error al obtener los detalles del pedido:', error);
                 setIsLoading(false);
             });
-    }, []);
+    }, [Client]);
 
 
     const OrderList = OrdersHistory.map((item, index) => (

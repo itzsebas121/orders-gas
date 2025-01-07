@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <script>
+       fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/-78.601601,-1.387892.json?access_token=pk.eyJ1Ijoic2ViYXMxMjEiLCJhIjoiY20yOWNvNno3MDN2cTJ2cHl4OWk2d2l3aCJ9.zR3wF032kr8Fq9NvziGLEw').
+        then(response => response.json()).then(data => alert( data.features[0].place_name)); 
+    </script>
+</body>
+</html>

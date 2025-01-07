@@ -36,6 +36,7 @@ const Timeline = (props) => {
                         {index === deliveryStates.length - 1 && (
                             <div className="timeline-component timeline-content" style={{ border: "5px solid #007BFF", boxShadow: "0px 0px 10px 0px rgba(45, 255, 87, 0.6)" }}>
                                 <ItemHistoryDelivery
+                                    key={index}
                                     status={state.StatusDetail}
                                     date={new Date(state.DateUpdate).toLocaleString()} 
                                 />
@@ -44,6 +45,7 @@ const Timeline = (props) => {
                         {deliveryStates.length - 1 !== index && (
                             <div className="timeline-component timeline-content">
                                 <ItemHistoryDelivery
+                                    key={state.DetailStatusID}
                                     status={state.StatusDetail}
                                     date={new Date(state.DateUpdate).toLocaleString()} 
                                 />

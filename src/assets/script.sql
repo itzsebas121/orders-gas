@@ -42,7 +42,6 @@ CREATE TABLE Orders (
         OrderDate DATETIMEOFFSET NOT NULL DEFAULT SYSDATETIMEOFFSET() AT TIME ZONE 'UTC' AT TIME ZONE 'SA Pacific Standard Time',
         OrderStatus NVARCHAR(50) NOT NULL CHECK (OrderStatus IN ('Pendiente', 'En Camino', 'Entregado', 'Cancelado')),
         Location NVARCHAR(255),
-        Location_Delivery NVARCHAR(255),
         Total FLOAT NULL,
         FOREIGN KEY (ClientID) REFERENCES Clients(ClientID) 
             ON DELETE CASCADE,
@@ -94,7 +93,8 @@ CREATE OR ALTER PROCEDURE InsertClient
     @Location NVARCHAR(255),
     @UserName NVARCHAR(100),
     @PhoneNumber Decimal(10,0),
-    @HashedPassword NVARCHAR(100)
+    @HashedPassword NVARCHAR(100),
+	@NameLocation NVARCHAR(400)
 AS
 BEGIN
     BEGIN TRY
@@ -107,8 +107,8 @@ BEGIN
         INSERT INTO Users (UserType, Username, HashedPassword)
         VALUES ('Client', @UserName, @EncryptedPassword);
 
-        INSERT INTO Clients (Name, LastName, Location, Username, PhoneNumber)
-        VALUES (@Name, @LastName, @Location, @UserName, @PhoneNumber);
+        INSERT INTO Clients (Name, LastName, Location, Username, PhoneNumber, NameLocation)
+        VALUES (@Name, @LastName, @Location, @UserName, @PhoneNumber, @NameLocation);
 
         COMMIT TRANSACTION;
     END TRY
@@ -186,9 +186,11 @@ CREATE OR ALTER PROCEDURE GetUserInfo
 AS
 BEGIN TRY
     DECLARE @UserType NVARCHAR(50);
+    DECLARE @Location NVARCHAR(50);
     DECLARE @ClientID INT;
     DECLARE @DistributorID INT;
     DECLARE @HashedPassword VARBINARY(MAX);
+	DECLARE @NameLocation NVARCHAR(400);
     SELECT 
         @UserType = UserType,
         @HashedPassword = HashedPassword
@@ -214,14 +216,18 @@ BEGIN TRY
     IF @UserType = 'Client'
     BEGIN
         SELECT 
-            @ClientID = ClientID
+            @ClientID = ClientID,
+			@Location = Location,
+			@NameLocation = NameLocation
         FROM Clients
         WHERE Username = @Username;
 
         SELECT 
             @Username AS Username,
             @UserType AS UserType,
-            @ClientID AS ClientID;
+            @ClientID AS ClientID,
+			@Location as Location,
+			@NameLocation as NameLocation;
 			
     END
     ELSE IF @UserType = 'Distributor'
@@ -278,23 +284,23 @@ END;
 
 CREATE or alter PROCEDURE Insert_Order
     @ClientID INT,
-    @Location NVARCHAR(255),
-	@Location_Geographic NVARCHAR(250)
+    @Location NVARCHAR(255)
 AS
 BEGIN
     Declare @NewOrderID INT;
-    INSERT INTO Orders (ClientID , OrderStatus,Location,  Location_Delivery, Total)
-    VALUES (@ClientID, 'Pendiente', @Location,@Location_Geographic, 0);
+    INSERT INTO Orders (ClientID , OrderStatus, Location, LocationCurrent, Total)
+    VALUES (@ClientID, 'Pendiente', @Location,@Location, 0);
     SET @NewOrderID = SCOPE_IDENTITY();
-	INSERT INTO DetailStatus VALUES ( @NewOrderID, 'Pendiente');
+	INSERT INTO DetailStatus (OrderID, StatusDetail) 
+	VALUES (@NewOrderID, 'Pendiente');
     select @NewOrderID as NewOrderID;
-
 END;
 
 EXEC Insert_Detail_Order
     @Order_ID = 1, 
     @Cylinder_id = 1,
     @Quantiti_cylinders = 3; 
+
 
 
 CREATE VIEW vwOrdersDetails AS  
@@ -306,8 +312,8 @@ SELECT
     o.ClientID,   
     o.OrderDate,   
     o.OrderStatus,   
-    o.Location,   
-    o.Location_Delivery,   
+    o.Location,
+	o.LocationCurrent,
     o.Total AS OrderTotal,   
     (SELECT   
         od.OdId,   
@@ -340,33 +346,34 @@ GROUP BY c.ClientID, c.Name, c.LastName;
 
 
 CREATE OR ALTER PROCEDURE SetOrderInTransit
-    @OrderID INT,
-	@DistributorID INT
-AS
-BEGIN
-    IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)
+        @OrderID INT,
+        @DistributorID INT,
+		@Location_Current NVARCHAR(100)
+    AS
     BEGIN
+        IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)
+        BEGIN
 
-        UPDATE orders
-SET 
-    OrderStatus = 'En Camino', 
-    DistributorID = @DistributorID, 
-    OrderDate = DATEADD(HOUR, -0, GETUTCDATE())
-WHERE 
-    OrderID = @OrderID;
+            UPDATE orders
+    SET 
+        OrderStatus = 'En Camino', 
+        DistributorID = @DistributorID, 
+        OrderDate = DATEADD(HOUR, -0, GETUTCDATE()),
+		LocationCurrent = @Location_Current
+    WHERE 
+        OrderID = @OrderID;
 
-		INSERT INTO DetailStatus (OrderID, StatusDetail) values ( @OrderID, 'En Camino');
-    END
-    ELSE
-    BEGIN
-        PRINT 'El pedido no existe.';
-    END
-END;
-GO
-
-CREATE OR ALTER PROCEDURE CancelOrder
-    @OrderID INT
-AS
+            INSERT INTO DetailStatus (OrderID, StatusDetail) values ( @OrderID, 'En Camino');
+        END
+        ELSE
+        BEGIN
+            PRINT 'El pedido no existe.';
+        END
+    END;
+    GO
+    CREATE OR ALTER PROCEDURE CancelOrder
+        @OrderID INT
+    AS
 BEGIN
 
     IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)

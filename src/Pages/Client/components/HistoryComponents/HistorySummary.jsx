@@ -4,11 +4,11 @@ const ItemSummary = lazy(() => import("../../mini-components/ItemSummary"));
 import ComponentLoading from "../../../../components/ComponentLoading";
 
 const HistorySummary = (props) => {
-    const { OrderId } = props;
+    const { Client } = props;
     const [summary, setSummary] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        fetch(`http://localhost:3000/getSummaryOrder/${OrderId}`)
+        fetch(`http://localhost:3000/getSummaryOrder/${Client.id}`)
             .then(response => response.json())
             .then(data => {
                 setSummary(data[0])
@@ -17,7 +17,7 @@ const HistorySummary = (props) => {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, [OrderId]);
+    }, [Client]);
     if (loading) {
         return (
             <div className="container-summary">

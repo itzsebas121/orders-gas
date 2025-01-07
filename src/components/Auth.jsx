@@ -10,8 +10,10 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem("token");
         expireToken()
 
-        if (token)
-            setUser(token);
+        if (token){
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            setUser(decodedToken);
+        }
         else
             logout();
 

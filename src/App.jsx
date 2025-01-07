@@ -9,7 +9,6 @@ const Distributor = lazy(() => import('./Pages/Distributor/Distributor'))
 function App() {
 
   return (
-    <Suspense fallback={<Loading />}>
 
       <Router>
         <Routes>
@@ -18,7 +17,6 @@ function App() {
           <Route path="/Distributor" element={<Distributor />} />
         </Routes>
       </Router>
-    </Suspense>
   )
 }
 

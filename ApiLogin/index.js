@@ -40,11 +40,30 @@ app.post('/login', async (req, res) => {
             if (firstRecord.ErrorMessage) {
                 return res.status(401).json({ message: firstRecord.ErrorMessage });
             }
-            const token = jwt.sign({
-                id: firstRecord.ClientID || firstRecord.DistributorID,
-                username: firstRecord.Username,
-                usertype: firstRecord.UserType
-            }, JWT_SECRET, { expiresIn: '1h' });
+            if (firstRecord.UserType === 'Client') {
+                const token = jwt.sign({
+                    id: firstRecord.ClientID,
+                    username: firstRecord.Username,
+                    usertype: firstRecord.UserType,
+                    location: firstRecord.Location,
+                    nameLocation: firstRecord.NameLocation
+
+                }, JWT_SECRET, { expiresIn: '1h' });
+                res.json({ token });
+                return;
+            } else if (firstRecord.UserType === 'Distributor') {
+                const token = jwt.sign({
+                    id: firstRecord.DistributorID,
+                    username: firstRecord.Username,
+                    usertype: firstRecord.UserType
+                }, JWT_SECRET, { expiresIn: '3h' });
+                res.json({ token });
+                return;
+            }
+            else {
+                return res.status(401).json({ message: 'Invalid user type' });
+            }
+
 
             res.json({ token });
         } else {
@@ -135,13 +154,12 @@ app.get('/getCylinders', async (req, res) => {
 })
 
 app.post('/createOrder', async (req, res) => {
-    const { ClientID, Location, Location_Geographic, OrderDetails } = req.body;
+    const { id, location } = req.body;
     try {
 
         const request = pool.request();
-        request.input('ClientID', sql.Int, ClientID);
-        request.input('Location', sql.VarChar, Location);
-        request.input('Location_Geographic', sql.VarChar, Location_Geographic);
+        request.input('ClientID', sql.Int, id);
+        request.input('Location', sql.VarChar, location);
         const result = await request.execute('Insert_Order');
         res.status(200).json(result.recordset);
     } catch (err) {
@@ -151,7 +169,7 @@ app.post('/createOrder', async (req, res) => {
 });
 app.post('/InsertDetails/:id', async (req, res) => {
     const { OrderID, cylinder_id, quantity } = req.body;
-    
+
     try {
         const request = pool.request();
         request.input('Order_ID', sql.Int, OrderID);
@@ -171,7 +189,7 @@ app.get('/getSummaryOrder/:clientid', async (req, res) => {
         res.status(200).json(result.recordset);
     } catch (err) {
         console.log(err);
-    }   
+    }
 });
 app.get('/getStatusOrder/:orderid', async (req, res) => {
     const orderid = req.params.orderid;
@@ -181,7 +199,7 @@ app.get('/getStatusOrder/:orderid', async (req, res) => {
     } catch (err) {
         console.log(err);
     }
-}); 
+});
 process.on('SIGINT', async () => {
     if (pool) {
         await pool.close();

@@ -1,11 +1,12 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
-import fetchOrders from "./ComponentsFetch/fetchOrder";
+
 import ComponentLoading from "../../../../components/ComponentLoading";
 
 
 const CurrentOrder = lazy(() => import("./CurrentOrder"));
 
 const CurrentOrders = (props) => {
+    const   { user } = props;
     const { sendOverlayClass } = props;
     const [OrderId, setOrderId] = useState("");
     const [orders, setOrders] = useState([]);
@@ -17,6 +18,16 @@ const CurrentOrders = (props) => {
     };
 
     useEffect(() => {
+        const fetchOrders = async () => {
+            const response = await fetch(`http://localhost:3000/ClientCurrentOrders/${user.id}`);
+            const data = await response.json();
+        
+            if (Array.isArray(data)) {
+                return data;
+            } else {
+                throw new Error("Los datos no son un arreglo");
+            }
+        }
         fetchOrders()
             .then(data => {
                 setOrders(data);
@@ -26,7 +37,7 @@ const CurrentOrders = (props) => {
                 console.error("Error al obtener las órdenes:", error);
                 setLoading(false);
             });
-    }, []);
+    }, [user.id]);
 
     if (loading) {
         return (

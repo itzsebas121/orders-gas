@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import NewOrder from './NewOrder';
 import DetailOrder from '../components/HomeComponents/DetailOrder';
-const Form = () => {
+const Form = (props) => {
+    const { user } = props
     const [cylinders, setCylinders] = useState([])
     const [overlay, setOverlay] = useState(false);
     const [detailOrder, setDetailOrder] = useState([]);
@@ -10,16 +11,12 @@ const Form = () => {
         document.getElementById('price').value = e.target.options[e.target.selectedIndex].getAttribute('data-price')
     }
     useEffect(() => {
+            
         fetch('http://localhost:3000/getCylinders')
             .then(res => res.json())
             .then(data => setCylinders(data))
     }, [])
-    const newOrder = [{
-        "ClientID": 1,
-        "Location": "San Salvador",
-        'Location_Geographic': '-1.387004, -78.600372',
-    }
-    ]
+    
     const handleOrderObject = () => {
         const cylinder = document.getElementById('tipoCilindro')
         const cantidad = document.getElementById('cantidad').value
@@ -81,7 +78,7 @@ const Form = () => {
                 <div className="columns-form">
                     <div className="input-form">
                         <label >Ubicación:</label>
-                        <input type="text" id="ubicacion" name="ubicacion" value="Av. 17 de abril" readOnly />
+                        <input type="text" id="ubicacion" name="ubicacion" value={user.nameLocation} readOnly />
                     </div>
                     <div className="input-form">
                         <label>Cambiar</label>
@@ -117,7 +114,7 @@ const Form = () => {
                 <label >Total</label>
                 <button type='button' onClick={handleSubmit}>Hacer Pedido</button>
             </form>
-            {overlay && <NewOrder hidden={hiddenOverlay} newOrder={newOrder[0]} OrderDetail={detailOrder}></NewOrder>}
+            {overlay && <NewOrder hidden={hiddenOverlay} newOrder={user} OrderDetail={detailOrder}></NewOrder>}
         </>
 
     );

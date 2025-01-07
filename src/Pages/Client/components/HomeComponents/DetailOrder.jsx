@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import Timeline from "../../mini-components/Timeline";
 import Loading from "../../../../components/Loading";
 const ItemState = lazy(() => import("../../mini-components/ItemState"));
+import Map from "../../../../components/Map";
 
 const DetailOrder = (props) => {
   const { OrderId, hidden } = props;
@@ -102,7 +103,9 @@ const DetailOrder = (props) => {
 
         <div className="map-order">
           <h3>Rastreo del pedido</h3>
-          <img src="https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/media/image/2023/02/google-maps-2961754.jpg?tf=3840x" alt="Mapa de rastreo" />
+          <div className="map-location">
+                <Map locationStart={Orders.LocationCurrent} locationEnd={Orders.Location}></Map>
+          </div>
         </div>
 
         <button onClick={hiddenOverlay}>Cerrar</button>
