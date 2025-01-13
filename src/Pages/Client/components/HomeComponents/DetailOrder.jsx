@@ -25,16 +25,13 @@ const DetailOrder = (props) => {
     fetch(`http://localhost:3000/OrderDetails/${OrderId}`)
       .then(response => response.json())
       .then(data => {
-
         setOrders(data);
         setLoading(false);
-
-
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }, [OrderId]);
+  }, []);
 
   if (loading) {
     return (
@@ -61,9 +58,9 @@ const DetailOrder = (props) => {
           <div className="state-order">
             <Suspense fallback={<div>Loading...</div>}>
               <ItemState typeIcon={"calendar"} title={"Fecha del pedido"} value={formattedDate} />
-              {Orders.OrderStatus == 'Cancelado' ? < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} 
-              value={'El pedido feu cancelado o rechazado'} />: 
-              < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} value={deliveryDate.toLocaleString()} /> }
+              {Orders.OrderStatus == 'Cancelado' ? < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"}
+                value={'El pedido feu cancelado o rechazado'} /> :
+                < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} value={deliveryDate.toLocaleString()} />}
 
               <ItemState typeIcon={"location"} title={"Lugar de entrega"} value={Orders.Location} />
             </Suspense>
@@ -104,7 +101,7 @@ const DetailOrder = (props) => {
         <div className="map-order">
           <h3>Rastreo del pedido</h3>
           <div className="map-location">
-                <Map locationStart={Orders.LocationCurrent} locationEnd={Orders.Location}></Map>
+            <Map locationStart={Orders.LocationCurrent} locationEnd={Orders.Location}></Map>
           </div>
         </div>
 

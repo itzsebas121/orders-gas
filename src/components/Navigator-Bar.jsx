@@ -6,12 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../../components/Auth";
-const NavigatorBar = () => {
+import { useAuth } from "./Auth";
+const NavigatorBar = (props) => {
+    const { Home, History } = props;
     const { logout } = useAuth();
     const isActive = (path) => location.pathname === path;
-    
+
     return (
         <nav className="navigator-bar">
 
@@ -20,10 +22,10 @@ const NavigatorBar = () => {
                 <ul>
                     <li>
 
-                        <NavLink to={"/Client/Home"} className={`${isActive('/Client/Home') ? 'item active' : 'item'}`} ><p><FontAwesomeIcon icon={faHome} />Inicio</p></NavLink>
+                        <NavLink to={Home} className={`${isActive({Home}) ? 'item active' : 'item'}`} ><p><FontAwesomeIcon icon={faHome} />Inicio</p></NavLink>
                     </li>
                     <li>
-                        <NavLink to={"/Client/History"} className={isActive('/Client/History') ? 'item active' : 'item'} > <p ><FontAwesomeIcon icon={faClockRotateLeft} />Historial</p> </NavLink>
+                        <NavLink to={History} className={isActive(History) ? 'item active' : 'item'} > <p ><FontAwesomeIcon icon={faClockRotateLeft} />Historial</p> </NavLink>
 
                     </li>
                 </ul>

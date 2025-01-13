@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones WebSocket</title>
+</head>
+
+<body>
+    <h1>Cliente con Notificaciones</h1>
+    <button id="notifyBtn">Enviar Notificación</button>
+    <ul id="notifications"></ul>
+
+    <script>
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+        }
+    </script>
+</body>
+
+</html>

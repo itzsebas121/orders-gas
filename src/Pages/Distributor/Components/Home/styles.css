@@ -1,0 +1,83 @@
+.home-distributor{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 97%;
+    height: 100vh;
+    padding: 20px;
+    grid-template-areas: "current-orders new-orders";
+    gap: 1em;
+}
+.currentOrders-distributor, .new-orders-distributor{
+    width: 90%;
+    margin: 0 auto;
+    height: 90%;
+    background-color: #424242;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px #333;
+}
+.currentOrders-distributor{
+    grid-area: current-orders;
+}
+.new-orders-distributor{
+    grid-area: new-orders;
+}
+.current-orders-container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    height: 540px;
+    border: 1px #ffffff3d solid;
+    padding: 20px 0;
+    gap:  1em;
+    overflow-y: auto;
+    border-radius: 20px;
+}
+.item-current-order{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    border: 1px #ffffff3d solid;
+    width: 80%;
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 10px;
+}
+.item-current-order h4{
+    font-size: 1.6em;
+}
+
+.parrafo{
+    padding: 5px 10px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    width: min-content;
+}
+.parrafo:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+.p-en-camino {
+    background-color: rgb(191 219 254);
+    color: rgb(30 64 175);
+}
+
+
+.current-order-pendiente{
+    background-color: rgb(254 240 138);
+    color: rgb(133 77 14);
+}
+.buttons-order {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+.buttons-order button{
+    height: min-content;
+}
+.buttons-order .btn-cancelar{
+    background-color: #f00;
+}
+.buttons-order .btn-entregado{
+    background-color: rgb(20, 150, 20);
+}

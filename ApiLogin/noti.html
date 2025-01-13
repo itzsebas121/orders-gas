@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones en el Navegador</title>
+</head>
+
+<body>
+    <h1>Notificaciones en el Navegador</h1>
+    <button id="notifyBtn">Solicitar Permiso y Enviar Notificación</button>
+
+    <script>
+        // Función para emitir una notificación
+        function enviarNotificacion() {
+            const title = "¡Notificación Emitida!";
+            const options = {
+                body: "Este es el contenido de la notificación.",
+                icon: "https://quecodigo.com/img/qc_logo.jpg", // Cambia este URL por tu icono
+                lang: "es", // Idioma
+                tag: "simple-notification", // Identificador único
+                renotify: true // Permitir volver a notificar
+            };
+
+            // Crear la notificación
+            const notification = new Notification(title, options);
+
+            // Cerrar automáticamente después de 5 segundos
+            setTimeout(() => {
+                notification.close();
+            }, 5000);
+
+            // Opcional: acción al hacer clic en la notificación
+            notification.onclick = () => {
+                alert("¡Hiciste clic en la notificación!");
+            };
+        }
+
+        // Evento del botón para solicitar permiso y emitir una notificación
+        document.getElementById("notifyBtn").addEventListener("click", () => {
+            // Verificar si las notificaciones están permitidas
+            if (Notification.permission === "granted") {
+                enviarNotificacion(); // Emitir notificación si ya se otorgaron permisos
+            } else if (Notification.permission === "default") {
+                // Solicitar permisos si el estado es "default"
+                Notification.requestPermission().then((permission) => {
+                    if (permission === "granted") {
+                        enviarNotificacion(); // Emitir notificación si el usuario otorga permiso
+                    } else {
+                        alert("No se concedieron permisos de notificación.");
+                    }
+                });
+            } else {
+                alert("Los permisos de notificación han sido denegados.");
+            }
+        });
+    </script>
+</body>
+
+</html>

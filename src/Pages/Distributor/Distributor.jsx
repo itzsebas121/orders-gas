@@ -1,10 +1,37 @@
-import React from "react";
-import Map from "../../components/Map";
+import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import NavigatorBar from "../../components/Navigator-Bar";
+import HomeDistributor from "./Components/Home/HomeDistributor";
+import HistoryDistributor from "./Components/History/HistoryDistributor";
+import { useAuth } from "../../components/Auth";
+import Loading from "../../components/Loading";
 const Distributor = () => {
-    return (
-        <div className="container-Map" style={{ width: "100%", height: "500px" }}>
+    const [Distributor, setDistributor] = React.useState([]);
+    const { verifyToken, user } = useAuth();
+    const [loading, setLoading] = useState(true);
 
-            <Map locationStart={"-1.387892, -78.601601"} locationEnd={"-1.2717417178200208, -78.6260109"} />
+
+    useEffect(() => {
+        verifyToken();
+        const distribuidorTk = localStorage.getItem('token');
+        if (distribuidorTk) {
+            const userjs = JSON.parse(atob(distribuidorTk.split('.')[1]));
+            setDistributor(distribuidorTk);
+            setLoading(false);
+        }
+    }, []);
+    if (loading)
+        return (<Loading />)
+    return (
+        <div className='container'>
+            <NavigatorBar Home={"/Distributor/HomeDistributor"} History={"/Distributor/HistoryDistributor"} />
+            <div className='container-dashboard'>
+                <Routes>
+                    <Route index element={<HomeDistributor user={Distributor} />} />
+                    <Route path='/HomeDistributor' element={<HomeDistributor user={Distributor} />} />
+                    <Route path='/HistoryDistributor' element={<HistoryDistributor />} />
+                </Routes>
+            </div>
         </div>
     );
 

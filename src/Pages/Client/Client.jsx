@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './Client.css';
-import NavigatorBar from './components/Navigator-Bar';
+import NavigatorBar from '../../components/Navigator-Bar';
 import { Routes, Route } from 'react-router-dom';
 import Loading from '../../components/Loading';
 import Home from './components/Home';
@@ -8,7 +8,7 @@ import History from './components/History';
 import { useAuth } from '../../components/Auth';
 
 const Client = () => {
-  const [Client, setClient] = React.useState([]); 
+  const [Client, setClient] = React.useState([]);
   const { verifyToken, user } = useAuth();
 
   useEffect(() => {
@@ -19,11 +19,11 @@ const Client = () => {
       const userjs = JSON.parse(atob(clientjs.split('.')[1]));
       setClient(userjs);
     }
-  }, []); 
+  }, []);
 
   return (
     <div className='container'>
-      <NavigatorBar />
+      <NavigatorBar Home={"/Client/Home"} History={"/Client/History"} />
       <div className='container-dashboard'>
         <Routes>
           <Route index element={<Home Client={Client} />} />

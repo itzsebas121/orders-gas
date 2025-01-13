@@ -14,7 +14,7 @@ const Form = (props) => {
             
         fetch('http://localhost:3000/getCylinders')
             .then(res => res.json())
-            .then(data => setCylinders(data))
+            .then(data => setCylinders(data))   
     }, [])
     
     const handleOrderObject = () => {
@@ -22,7 +22,7 @@ const Form = (props) => {
         const cantidad = document.getElementById('cantidad').value
         const price = document.getElementById('price').value
         if (price === '') {
-            alert('Seleeccione un cilindro')
+            alert('Seleccione un cilindro')
             return
         } else if (cantidad === '') {
             alert('Ingrese la cantidad')
