@@ -6,37 +6,37 @@ const ItemNewOrder = (props) => {
     const [locationCurrent, setLocationCurrent] = useState("")
     const handlesumit = () => {
         alert(order.OrderID + "  aver a qui")
-        startTracking()
+        getLocation()
         alert(locationCurrent)
     }
-    const startTracking = () => {
+    const getLocation = () => {
         if ("geolocation" in navigator) {
           const watchId = navigator.geolocation.watchPosition(
             (position) => {
-              console.log("Latitud:", position.coords.latitude);
-              console.log("Longitud:", position.coords.longitude);
-              console.log("Precisión:", position.coords.accuracy, "metros");
+                const aux = position.coords.latitude +", "+ position.coords.longitude
+              console.log(`Latitud: ${position.coords.latitude}`);
+              console.log(`Longitud: ${position.coords.longitude}`);
+              console.log(`Precisión: ${position.coords.accuracy} metros`);
             },
             (error) => {
               console.error("Error al obtener ubicación:", error.message);
             },
             {
-              enableHighAccuracy: true, // Usa GPS para máxima precisión
-              timeout: 20000,          // Espera hasta 20 segundos por datos
-              maximumAge: 0,           // Siempre obtiene datos frescos
+              enableHighAccuracy: true, 
+              timeout: 15000,
+              maximumAge: 0,
             }
           );
       
-          // Si necesitas detener el seguimiento después de un tiempo
           setTimeout(() => {
             navigator.geolocation.clearWatch(watchId);
-          }, 60000); // Detén el seguimiento después de 1 minuto
+          }, 60000); 
         } else {
           alert("Geolocalización no está disponible en este navegador.");
         }
       };
       
-
+      
     return (
         <div className="item-new-order">
             <div className="container-item">
