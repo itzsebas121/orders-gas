@@ -10,7 +10,6 @@ const HomeDistributor = (props) => {
 
     useEffect(() => {
         if (user && distributor.current !== user) {
-            console.log(user);
             distributor.current = user;
             setLoading(false);
         }
@@ -21,7 +20,7 @@ const HomeDistributor = (props) => {
         <div className="home-distributor">
             <div className="currentOrders-distributor">
                 <h2>Ordenes pendientes de entrega</h2>
-                <CurrentOrdersDistributor/>
+                <CurrentOrdersDistributor user={distributor.current} /> 
             </div>
             <div className="new-orders-distributor">
                 <h2>Nuevos pedidos</h2>

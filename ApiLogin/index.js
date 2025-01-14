@@ -200,6 +200,65 @@ app.get('/getStatusOrder/:orderid', async (req, res) => {
         console.log(err);
     }
 });
+app.get('/getNewOrders', async (req, res) => {
+    const orderid = req.params.orderid;
+    try {
+        const result = await pool.request().query`select * from vwGetNewOrders`;
+        const orders = result.recordset;
+        const newOrders=[]
+        orders.forEach(order => {
+
+            console.log(order)
+            console.log(typeof order.OrderDetails)
+            if (typeof order.OrderDetails === 'string') {
+                try {
+                    order.OrderDetails = JSON.parse(order.OrderDetails);
+                    newOrders.push(order)
+                } catch (parseError) {
+                    order.OrderDetails = [];
+                    newOrders.push(order)
+                }
+            } else {
+                order.OrderDetails = [];
+                newOrders.push(order)
+
+            }
+        });
+        res.status(200).json(newOrders);
+    } catch (err) {
+        console.log(err);
+    }
+})
+app.get('/GetCurrentOrdersDistributor/:id', async (req, res) => {
+    const orderid = req.params.orderid;
+    const id = req.params.id;
+    try {
+        const result = await pool.request().query`select * from vwGetCurrentOrdersDistributor where DistributorID = ${id}`;
+        const orders = result.recordset;
+        const newOrders=[]
+        orders.forEach(order => {
+
+            console.log(order)
+            console.log(typeof order.OrderDetails)
+            if (typeof order.OrderDetails === 'string') {
+                try {
+                    order.OrderDetails = JSON.parse(order.OrderDetails);
+                    newOrders.push(order)
+                } catch (parseError) {
+                    order.OrderDetails = [];
+                    newOrders.push(order)
+                }
+            } else {
+                order.OrderDetails = [];
+                newOrders.push(order)
+
+            }
+        });
+        res.status(200).json(newOrders);
+    } catch (err) {
+        console.log(err);
+    }
+})
 process.on('SIGINT', async () => {
     if (pool) {
         await pool.close();

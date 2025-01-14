@@ -1,14 +1,21 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ItemCurrentOrder from "./ItemCurrentOrder";
+import Loading from "../../../../components/Loading"
+import { use } from "react";
+const CurrentOrdersDistributor = (props) => {
+    const { user } = props;
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const hasMounted = useRef(false);
 
-const CurrentOrdersDistributor = () => {
-    const orders = [
+    /*  const orders = [
         {
             nameClient: "Sebas Tipan",
             items: [
                 { item: "2 x Gas Domestico" }
             ],
             total: 45,
+            phoneNumber:"5939989898989898",
             state: "Pendiente"
         },
         {
@@ -48,7 +55,29 @@ const CurrentOrdersDistributor = () => {
             state: "Pendiente"
         }
     ];
+  */
 
+    useEffect(() => {
+        if (user.id) {
+            if (!hasMounted.current) {
+
+                hasMounted.current = true;
+
+                fetch(`http://localhost:3000/GetCurrentOrdersDistributor/${user.id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        setOrders(data)
+                        console.log(data)
+                        setLoading(false)
+                    })
+                    .catch(error => console.error(error));
+            }
+        }
+    }, [user.id]);
+
+    if (loading) {
+        return <Loading />
+    }
     const orderlist = orders.map((element, index) => {
         return (
             < ItemCurrentOrder order={element} key={index} />);

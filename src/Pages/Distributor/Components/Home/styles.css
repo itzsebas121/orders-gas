@@ -1,4 +1,4 @@
-.home-distributor{
+.home-distributor {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 97%;
@@ -7,7 +7,12 @@
     grid-template-areas: "current-orders new-orders";
     gap: 1em;
 }
-.currentOrders-distributor, .new-orders-distributor{
+.home-distributor h2{
+    text-align: center;
+    font-size: 2em;
+}
+.currentOrders-distributor,
+.new-orders-distributor {
     width: 90%;
     margin: 0 auto;
     height: 90%;
@@ -16,68 +21,139 @@
     border-radius: 10px;
     border: 1px #333;
 }
-.currentOrders-distributor{
+
+.currentOrders-distributor {
     grid-area: current-orders;
 }
-.new-orders-distributor{
+
+.new-orders-distributor {
     grid-area: new-orders;
 }
-.current-orders-container{
+
+.current-orders-container {
     display: flex;
     flex-direction: column;
     margin-top: 20px;
     height: 540px;
     border: 1px #ffffff3d solid;
     padding: 20px 0;
-    gap:  1em;
+    gap: 1em;
     overflow-y: auto;
     border-radius: 20px;
 }
-.item-current-order{
+
+.item-current-order,
+.item-new-order {
     display: flex;
     flex-direction: column;
     gap: 1em;
-    border: 1px #ffffff3d solid;
-    width: 80%;
+    width: 90%;
     margin: 0 auto;
     padding: 10px;
     border-radius: 10px;
 }
-.item-current-order h4{
+
+.item-current-order h4 {
     font-size: 1.6em;
 }
 
-.parrafo{
+.parrafo {
     padding: 5px 10px;
     border-radius: 20px;
     transition: all 0.3s ease;
-    width: min-content;
+    width: 80px;
 }
-.parrafo:hover{
+
+.parrafo:hover {
     transform: scale(1.1);
     cursor: pointer;
 }
+
 .p-en-camino {
     background-color: rgb(191 219 254);
     color: rgb(30 64 175);
 }
 
 
-.current-order-pendiente{
-    background-color: rgb(254 240 138);
-    color: rgb(133 77 14);
-}
 .buttons-order {
+    margin-top: 10px;
     display: flex;
     align-items: center;
     gap: 1em;
 }
-.buttons-order button{
+
+.buttons-order button {
     height: min-content;
 }
-.buttons-order .btn-cancelar{
+
+.buttons-order .btn-cancelar {
     background-color: #f00;
 }
-.buttons-order .btn-entregado{
+
+.buttons-order .btn-entregado {
     background-color: rgb(20, 150, 20);
+}
+
+.buttons-new-orders {
+    display: flex;
+    justify-content: end;
+}
+
+.buttons-new-orders button {
+    margin: 0;
+    background-color: rgb(20, 150, 20);
+    width: 50%;
+}
+
+.container-item {
+    width: 90%;
+    background-color: #333;
+    border: 1px solid #424242;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    margin: 16px 0;
+}
+
+.container-item h2 {
+    color: #3498db;
+    font-size: 1.8rem;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    text-align: left;
+}
+.name-item{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px #fff solid;
+}
+.order-items {
+    margin: 12px 0;
+    padding-left: 16px;
+    border-left: 4px solid #3498db;
+}
+
+.item {
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.total,
+.location {
+    color: #ff0;
+    margin: 12px 0;
+    text-align: left;
+}
+
+.total span,
+.location span {
+    font-weight: bold;
+    color: #ffffffb5;
+}
+
+.container-item:hover {
+    transform: scale(1.01);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }

@@ -16,7 +16,7 @@ const Distributor = () => {
         const distribuidorTk = localStorage.getItem('token');
         if (distribuidorTk) {
             const userjs = JSON.parse(atob(distribuidorTk.split('.')[1]));
-            setDistributor(distribuidorTk);
+            setDistributor(userjs)
             setLoading(false);
         }
     }, []);

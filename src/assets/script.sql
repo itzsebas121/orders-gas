@@ -410,3 +410,45 @@ BEGIN
     END
 END;
 GO
+
+CREATE VIEW vwGetNewOrders
+as
+SELECT 
+O.OrderID,
+c.Name, 
+c.LastName, 
+o.Total, 
+o.LocationName 
+,(SELECT   
+        cy.TypeCylinder,   
+        od.Quantity   
+     FROM Orders_details od  
+     INNER JOIN Cylinders cy ON od.Cylinder = cy.CylinderID  
+     WHERE od.OrderID = o.OrderID  
+     FOR JSON PATH) AS OrderDetails 
+from Orders o
+LEFT join Clients c on o.ClientID = c.ClientID  
+
+GO
+
+CREATE VIEW vwGetCurrentOrdersDistributor
+as
+SELECT 
+O.OrderID,
+o.DistributorID,
+c.Name, 
+c.LastName, 
+c.PhoneNumber,
+o.Total
+,(SELECT   
+        cy.TypeCylinder,   
+        od.Quantity   
+     FROM Orders_details od  
+     INNER JOIN Cylinders cy ON od.Cylinder = cy.CylinderID  
+     WHERE od.OrderID = o.OrderID  
+     FOR JSON PATH) AS OrderDetails 
+from Orders o
+LEFT join Clients c on o.ClientID = c.ClientID  
+where o.OrderStatus = 'En Camino'
+
+GO

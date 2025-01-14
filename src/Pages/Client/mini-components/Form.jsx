@@ -11,7 +11,6 @@ const Form = (props) => {
         document.getElementById('price').value = e.target.options[e.target.selectedIndex].getAttribute('data-price')
     }
     useEffect(() => {
-            
         fetch('http://localhost:3000/getCylinders')
             .then(res => res.json())
             .then(data => setCylinders(data))   
