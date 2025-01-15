@@ -17,6 +17,7 @@ const ItemNewOrder = (props) => {
               console.log(`Latitud: ${position.coords.latitude}`);
               console.log(`Longitud: ${position.coords.longitude}`);
               console.log(`Precisión: ${position.coords.accuracy} metros`);
+              setLocationCurrent(aux)
             },
             (error) => {
               console.error("Error al obtener ubicación:", error.message);
