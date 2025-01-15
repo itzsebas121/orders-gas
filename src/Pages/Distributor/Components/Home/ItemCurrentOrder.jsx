@@ -1,9 +1,9 @@
-import React, {useState}from "react";
+import React, { useState } from "react";
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DetailOrder from "../../../Client/components/HomeComponents/DetailOrder";
 const ItemCurrentOrder = (props) => {
-    const { order, onSendValue } = props; 
+    const { order, onSendValue } = props;
     const [overlay, sendOverlay] = useState(false);
 
     const hiddenOverlay = (value) => {
@@ -11,7 +11,7 @@ const ItemCurrentOrder = (props) => {
     };
 
     const sendOrderId = () => {
-        onSendValue(order.OrderID); 
+        onSendValue(order.OrderID);
     };
 
     const handleWhatsapp = () => {
@@ -19,7 +19,18 @@ const ItemCurrentOrder = (props) => {
     };
 
     const handleCancel = () => {
-        alert("Lógica para cancelar el pedido");
+        fetch(
+            `http://localhost:3000/CancelOrder`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    OrderID: order.OrderID,
+                })
+            }
+        ).then(response => response.json()).then(data => alert(data.message))
     };
 
     const handleDelivered = () => {

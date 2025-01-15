@@ -17,8 +17,7 @@ const CurrentOrdersDistributor = (props) => {
         setOrderId(value);
     };
     const getCurrentOrder = async () => {
-        
-
+        setLoading(true);
         try {
             const response = await fetch(`http://localhost:3000/GetCurrentOrdersDistributor/${user.id}`);
             const data = await response.json();
@@ -34,16 +33,22 @@ const CurrentOrdersDistributor = (props) => {
         if (user.id) {
             if (!hasMounted.current) {
                 hasMounted.current = true;
-                getCurrentOrder()
+                getCurrentOrder();
             }
         }
         socket.on('AgreeOrder', (message) => {
+            if (user.id == message.DistributorID) {
+                getCurrentOrder()
+            }
         });
+        return () => {
+            socket.off('AgreeOrder');
+        };
     }, [user.id]);
 
     if (loading) {
         return <Loading />;
-    }
+    }   
 
     const orderlist = orders.map((element, index) => {
         return (

@@ -3,8 +3,12 @@ import './styles.css'
 import { colors } from '@mui/material';
 import { alignProperty } from '@mui/material/styles/cssUtils';
 const HistoryItem = (props) => {
-    const { id, status, date, detail_order, location, total } = props;
+    const { onSendValue, id, status, date, detail_order, location, total } = props;
     const dateFormat = new Date(date).toLocaleDateString();
+
+    const sendOrderId = () => {
+        onSendValue(id)
+    }
     return (
         <div className="card-history">
             <div className="card-header">
@@ -25,7 +29,7 @@ const HistoryItem = (props) => {
                 ))}
                 <p className="address"><b>Direccion: </b>{location}</p>
                 <p className="total" style={{ textAlign: 'center' }}><b>Total: </b>${total}</p>
-                <button >Ver detalles</button>
+                <button onClick={sendOrderId}>Ver detalles</button>
             </div>
         </div>
     );

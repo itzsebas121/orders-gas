@@ -14,7 +14,6 @@ const CurrentOrders = (props) => {
     const handleOrderId = (value) => {
         sendOverlayClass(value);
         setOrderId(value);
-        alert(value);
     };
 
     useEffect(() => {

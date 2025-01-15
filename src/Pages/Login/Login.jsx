@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./Login.css";
 import { useNavigate } from 'react-router-dom'
+import Register from "./Register";
 const token = localStorage.getItem("token")
 
 const Login = () => {
@@ -51,6 +52,9 @@ const Login = () => {
         }).catch(error => console.error('Error:', error))
 
     };
+    const showRegister = () => {
+        document.querySelector('.overlay-register').classList.add('active');
+    }
     return (
         <div id="login">
             <form method="GET" action="" className="form-login" onSubmit={handleLogin}>
@@ -62,7 +66,11 @@ const Login = () => {
                 <input id="password" className='input' type="password" placeholder="Ingresa tu contraseña" required />
                 <br />
                 <button>Iniciar Sesión</button>
+                <button type="button" onClick={showRegister}>Registrarse</button>
             </form>
+            <div className="overlay-register">
+                <Register />
+            </div>
         </div>
     );
 };

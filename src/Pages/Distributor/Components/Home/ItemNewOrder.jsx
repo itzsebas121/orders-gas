@@ -21,7 +21,7 @@ const ItemNewOrder = (props) => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    socket.emit('AgreeOrder', data);
+                    socket.emit('AgreeOrder', orderAcept);
                 })
                 .catch(error => console.error(error));
         });

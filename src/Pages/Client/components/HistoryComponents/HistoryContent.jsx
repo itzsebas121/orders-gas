@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import HistoryItem from "./HistoryItem";
 const HistoryContent = (props) => {
-    const { Client } = props;
+    const { Client, sendOverlayClass } = props;
     const [OrdersHistory, setOrdersHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [OrderId, setOrderId] = useState("");
 
     useEffect(() => {
         fetch(`http://localhost:3000/ClientHistoryOrders/${Client.id}`)
@@ -21,14 +22,22 @@ const HistoryContent = (props) => {
             });
     }, [Client]);
 
+    const handleOrderId = (value) => {
+        sendOverlayClass(value);
+        setOrderId(value);
+    };
 
     const OrderList = OrdersHistory.map((item, index) => (
 
-        <HistoryItem key={item.OrderID} id={item.OrderID}
-        status={item.OrderStatus}
-        date={item.OrderDate}
-        detail_order={item.OrderDetails}
-        location={item.Location} total={item.OrderTotal} />
+        <HistoryItem
+            key={item.OrderID}
+            id={item.OrderID}
+            status={item.OrderStatus}
+            date={item.OrderDate}
+            detail_order={item.OrderDetails}
+            location={item.Location}
+            total={item.OrderTotal}
+            onSendValue={handleOrderId} />
     ))
     return (
         <div className="history-content">

@@ -177,12 +177,13 @@ app.post('/AceptOrder', async (req, res) => {
 });
 
 app.post('/createOrder', async (req, res) => {
-    const { id, location } = req.body;
+    const { id, location, nameLocation } = req.body;
     try {
 
         const request = pool.request();
         request.input('ClientID', sql.Int, id);
         request.input('Location', sql.VarChar, location);
+        request.input('LocationName', sql.NVarChar, nameLocation);
         const result = await request.execute('Insert_Order');
         res.status(200).json(result.recordset);
     } catch (err) {
@@ -282,6 +283,47 @@ app.get('/GetCurrentOrdersDistributor/:id', async (req, res) => {
         console.log(err);
     }
 })
+
+app.post('/CancelOrder', async (req, res) => {
+    try {
+        const request = pool.request();
+        const { OrderID } = req.body;
+
+        request.input('OrderID', sql.Int, OrderID);
+
+        const result = await request.execute('CancelOrder');
+        console.log(result);
+        if (result.rowsAffected.length > 0) {
+            res.status(200).json({ message: 'Pedido cancelado correctamente' });
+        } else {
+            res.status(404).send('Pedido no encontrado');
+        }
+
+    } catch (err) {
+        console.error('Error en la conexión o consulta:', err);
+        res.status(500).send('Error en la base de datos');
+    }
+});
+app.post('/CreateClient', async (req, res) => {
+    const { Name, LastName, HashedPassword, UserName, PhoneNumber, Location, NameLocation } = req.body;
+    try {
+
+        const request = pool.request();
+        request.input('Name', sql.NVarChar, Name);
+        request.input('LastName', sql.NVarChar, LastName);
+        request.input('HashedPassword', sql.NVarChar, HashedPassword);
+        request.input('UserName', sql.NVarChar, UserName);
+        request.input('PhoneNumber', sql.Decimal, PhoneNumber);
+        request.input('Location', sql.NVarChar, Location);
+        request.input('NameLocation', sql.NVarChar, NameLocation);
+
+        const result = await request.execute('InsertClient');
+        res.status(200).json({message: 'Exito'});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({message: 'Error'});;
+    }
+});
 process.on('SIGINT', async () => {
     if (pool) {
         await pool.close();

@@ -32,7 +32,6 @@ const NewOrdersDist = (props) => {
                 getNewOrders();
             });
             socket.on('AgreeOrder', (message) => {
-                alert(message)
                 getNewOrders();
             });
         }

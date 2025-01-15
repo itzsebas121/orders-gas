@@ -284,12 +284,13 @@ END;
 
 CREATE or alter PROCEDURE Insert_Order
     @ClientID INT,
-    @Location NVARCHAR(255)
+    @Location NVARCHAR(255),
+	@LocationName NVARCHAR(500)
 AS
 BEGIN
     Declare @NewOrderID INT;
-    INSERT INTO Orders (ClientID , OrderStatus, Location, LocationCurrent, Total)
-    VALUES (@ClientID, 'Pendiente', @Location,@Location, 0);
+    INSERT INTO Orders (ClientID , OrderStatus, Location, LocationCurrent, Total, LocationName)
+    VALUES (@ClientID, 'Pendiente', @Location,@Location, 0, @LocationName);
     SET @NewOrderID = SCOPE_IDENTITY();
 	INSERT INTO DetailStatus (OrderID, StatusDetail) 
 	VALUES (@NewOrderID, 'Pendiente');
@@ -299,7 +300,8 @@ END;
 EXEC Insert_Detail_Order
     @Order_ID = 1, 
     @Cylinder_id = 1,
-    @Quantiti_cylinders = 3; 
+    @Quantiti_cylinders = 3;,
+    @LocationName = "hjsdjshjd"
 
 
 
@@ -311,7 +313,8 @@ SELECT
     o.OrderID,   
     o.ClientID,   
     o.OrderDate,   
-    o.OrderStatus,   
+    o.OrderStatus,  
+	o.LocationName,
     o.Location,
 	o.LocationCurrent,
     o.Total AS OrderTotal,   

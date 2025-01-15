@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     });
     socket.on('AgreeOrder', (data) => {
         console.log('Mensaje:', data);
-        socket.broadcast.emit('AgreeOrder', 'Pedido Aceptado');
+        socket.broadcast.emit('AgreeOrder', data);
     });
     socket.emit('message', '¡Bienvenido al servidor WebSocket!');
 

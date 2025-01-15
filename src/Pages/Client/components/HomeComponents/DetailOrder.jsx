@@ -63,7 +63,7 @@ const DetailOrder = (props) => {
                 value={'El pedido feu cancelado o rechazado'} /> :
                 < ItemState typeIcon={"clock"} title={"Hora estimada de entrega"} value={deliveryDate.toLocaleString()} />}
 
-              <ItemState typeIcon={"location"} title={"Lugar de entrega"} value={Orders.Location} />
+              <ItemState typeIcon={"location"} title={"Lugar de entrega"} value={Orders.LocationName} />
             </Suspense>
           </div>
         </div>
