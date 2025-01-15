@@ -7,7 +7,8 @@ const sql = require('mssql');
 const jwt = require('jsonwebtoken');
 
 app.use(express.json());
-const JWT_SECRET = 'webtoken';//tenemos que cambiar esto (lo mejor con variables de entorno para mas seguridad) 
+const JWT_SECRET = 'webtoken';
+
 
 app.use(cors({
     origin: '*',
@@ -91,7 +92,7 @@ app.get('/protected', (req, res) => {
 app.get('/ClientCurrentOrders/:id', async (req, res) => {
     const id = req.params.id;
     try {
-        const result = await pool.request().query`SELECT OrderID, OrderStatus, Location, Total FROM Orders WHERE ClientID = ${id} AND OrderStatus IN ('Pendiente', 'En camino')`;
+        const result = await pool.request().query`SELECT OrderID, OrderStatus, Location, LocationName, Total FROM Orders WHERE ClientID = ${id} AND OrderStatus IN ('Pendiente', 'En camino')`;
         if (result.recordset.length === 0) {
             return res.status(404).send('No se encontraron pedidos para este cliente');
         }
@@ -152,6 +153,28 @@ app.get('/getCylinders', async (req, res) => {
     }
 
 })
+app.post('/AceptOrder', async (req, res) => {
+    try {
+        const request = pool.request();
+        const { OrderID, DistributorID, Location_Current } = req.body;
+
+        request.input('OrderID', sql.Int, OrderID);
+        request.input('DistributorID', sql.Int, DistributorID);
+        request.input('Location_Current', sql.NVarChar, Location_Current);
+
+        const result = await request.execute('SetOrderInTransit');
+        console.log(result);
+        if (result.rowsAffected.length > 0) {
+            res.status(200).json({ message: 'Pedido aceptado correctamente' });
+        } else {
+            res.status(404).send('Usuario no encontrado');
+        }
+
+    } catch (err) {
+        console.error('Error en la conexión o consulta:', err);
+        res.status(500).send('Error en la base de datos');
+    }
+});
 
 app.post('/createOrder', async (req, res) => {
     const { id, location } = req.body;
@@ -205,7 +228,7 @@ app.get('/getNewOrders', async (req, res) => {
     try {
         const result = await pool.request().query`select * from vwGetNewOrders`;
         const orders = result.recordset;
-        const newOrders=[]
+        const newOrders = []
         orders.forEach(order => {
 
             console.log(order)
@@ -235,7 +258,7 @@ app.get('/GetCurrentOrdersDistributor/:id', async (req, res) => {
     try {
         const result = await pool.request().query`select * from vwGetCurrentOrdersDistributor where DistributorID = ${id}`;
         const orders = result.recordset;
-        const newOrders=[]
+        const newOrders = []
         orders.forEach(order => {
 
             console.log(order)

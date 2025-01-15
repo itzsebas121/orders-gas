@@ -1,20 +1,31 @@
-import React from "react";
+import React, {useState}from "react";
 import { faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DetailOrder from "../../../Client/components/HomeComponents/DetailOrder";
 const ItemCurrentOrder = (props) => {
-    const { order } = props
-    const handleWhatsapp =()=>{
-        alert(order.PhoneNumber)
-    }
-    const handleView =()=>{
-        alert("Logica para ver el pedido")
-    }
-    const handleCancel =()=>{
-        alert("Logica para cancelar el pedido")
-    }
-    const handleDelivered =()=>{
-        alert("Logica para marcar el pedido como entregado")
-    }
+    const { order, onSendValue } = props; 
+    const [overlay, sendOverlay] = useState(false);
+
+    const hiddenOverlay = (value) => {
+        sendOverlay(value);
+    };
+
+    const sendOrderId = () => {
+        onSendValue(order.OrderID); 
+    };
+
+    const handleWhatsapp = () => {
+        alert(order.PhoneNumber);
+    };
+
+    const handleCancel = () => {
+        alert("Lógica para cancelar el pedido");
+    };
+
+    const handleDelivered = () => {
+        alert("Lógica para marcar el pedido como entregado");
+    };
+
     return (
         <div className="item-new-order">
             <div className="container-item">
@@ -22,6 +33,9 @@ const ItemCurrentOrder = (props) => {
                     <h2>{order.Name} {order.LastName}</h2>
                     <FontAwesomeIcon icon={faWhatsapp} size="2x" onClick={handleWhatsapp} />
                 </div>
+                {order.OrderStatus === 'En Camino' && (
+                    <p className="parrafo p-en-camino">{order.OrderStatus}</p>
+                )}
                 <div className="order-items">
                     {order.OrderDetails.map((item, index) => (
                         <p key={index} className="item">
@@ -31,17 +45,15 @@ const ItemCurrentOrder = (props) => {
                 </div>
 
                 <p className="total">Total: <span>${order.Total}</span></p>
-                {order.OrderStatus === 'En Camino' && (
-                    <p className="parrafo p-en-camino">{order.OrderStatus}</p>
-                )}
+
                 <div className="buttons-order">
-                    <button onClick={handleView}>Ver</button>
+                    <button onClick={sendOrderId}>Ver</button>
                     <button className="btn-entregado" onClick={handleDelivered}>Entregado</button>
                     <button className="btn-cancelar" onClick={handleCancel}>Cancelar</button>
                 </div>
             </div>
         </div>
-
     );
-}
+};
+
 export default ItemCurrentOrder;

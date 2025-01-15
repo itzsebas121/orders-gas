@@ -26,6 +26,7 @@
     height: 100vh;
     background-color: #222;
     padding: 20px 10px;
+    grid-area: content;
 }
 .record-client{
     background-color: #333;
@@ -43,4 +44,23 @@
     text-align: center;
     font-size: 2em;
     padding: 15px;
+}
+
+@media (max-width: 1340px) {
+    .record-client{
+        height: 100%;
+    }
+}
+@media (max-width: 800px) {
+    .home{
+        grid-template-columns: 1fr;
+        grid-template-areas: "new-order" "current-order";
+        overflow-y: auto;
+    }
+    .container-dashboard{
+        padding: 0;
+    }
+    .record-client{
+        margin: 0;
+    }
 }

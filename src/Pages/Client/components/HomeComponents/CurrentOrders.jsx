@@ -6,8 +6,7 @@ import ComponentLoading from "../../../../components/ComponentLoading";
 const CurrentOrder = lazy(() => import("./CurrentOrder"));
 
 const CurrentOrders = (props) => {
-    const   { user } = props;
-    const { sendOverlayClass } = props;
+    const { sendOverlayClass, user} = props;
     const [OrderId, setOrderId] = useState("");
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -15,6 +14,7 @@ const CurrentOrders = (props) => {
     const handleOrderId = (value) => {
         sendOverlayClass(value);
         setOrderId(value);
+        alert(value);
     };
 
     useEffect(() => {
@@ -54,15 +54,15 @@ const CurrentOrders = (props) => {
             onSendValue={handleOrderId}
             OrderId={order.OrderID}
             Status={order.OrderStatus}
-            Price={order.Price}
-            location={order.Location}
+            Price={order.Total}
+            location={order.LocationName}
         />
     ));
 
     return (
         <div className="current-orders">
             <h1>Pedidos Actuales</h1>
-            {OrderList}
+            {OrderList.length != 0 ? OrderList : <h2>Usted no tiene pedidos pendientes</h2>}
         </div>
     );
 }

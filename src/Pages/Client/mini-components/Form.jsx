@@ -13,9 +13,9 @@ const Form = (props) => {
     useEffect(() => {
         fetch('http://localhost:3000/getCylinders')
             .then(res => res.json())
-            .then(data => setCylinders(data))   
+            .then(data => setCylinders(data))
     }, [])
-    
+
     const handleOrderObject = () => {
         const cylinder = document.getElementById('tipoCilindro')
         const cantidad = document.getElementById('cantidad').value

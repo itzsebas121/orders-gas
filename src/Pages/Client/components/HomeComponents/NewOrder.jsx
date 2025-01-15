@@ -8,7 +8,7 @@ const NewOrder = (props) => {
     return (
 
         <div className="new-order">
-            <Suspense fallback={   <ComponentLoading />}>
+            <Suspense fallback={<ComponentLoading />}>
                <Form user={user}></Form>
             </Suspense>
         </div >

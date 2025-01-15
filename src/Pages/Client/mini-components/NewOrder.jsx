@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import ComponentLoading from '../../../components/ComponentLoading';
+import io from 'socket.io-client';
+const socket = io('http://localhost:8080'); 
 const NewOrder = (props) => {
     const { newOrder, OrderDetail, hidden } = props;
     const [loading, setLoading] = useState(true);
@@ -30,8 +32,9 @@ const NewOrder = (props) => {
                             body: JSON.stringify(element),
                         })
                             .then(response => response.json())
-                            .then(data => {
+                            .then(dataDetail => {
                                //AQUI DEBO AGREGAR LA LOGICA PARA QUE APAREZACA EL MODAL
+                               socket.emit('sendMessageToOtherClient', newOrder);
                             })
                             .catch(error => {
                                 console.error('Error:', error);

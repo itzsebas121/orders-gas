@@ -22,6 +22,8 @@ button {
     display: flex;
     flex-direction: column;
     gap: 2em;
+        height: 666px;
+    overflow: auto;
 }
 
 .formOrder {
@@ -243,7 +245,16 @@ thead {
 .detail-order button{
     margin-top: 40px;
 }
+@media (max-width: 1080px) {
+    .columns-form{
+        grid-template-columns: 1fr;
+    } 
+    .detail-order h2{
+        text-align: center;
+    }
+}
 @media screen and (min-width: 768px) {
+    
     .timeline {
         display: grid;
         grid-template-columns: 10px 1px 1fr;
@@ -271,5 +282,10 @@ thead {
         background-image: linear-gradient(135deg, #007BFF, #1454eb);
         -webkit-transform: translateX(-50%);
         transform: translateX(-50%);
+    }
+}
+@media (max-width: 500px) {
+    .table.detail{
+        width: 100%;
     }
 }

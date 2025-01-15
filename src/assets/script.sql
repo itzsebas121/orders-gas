@@ -411,7 +411,7 @@ BEGIN
 END;
 GO
 
-CREATE VIEW vwGetNewOrders
+create VIEW vwGetNewOrders
 as
 SELECT 
 O.OrderID,
@@ -428,6 +428,7 @@ o.LocationName
      FOR JSON PATH) AS OrderDetails 
 from Orders o
 LEFT join Clients c on o.ClientID = c.ClientID  
+where o.OrderStatus = 'Pendiente'
 
 GO
 

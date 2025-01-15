@@ -19,6 +19,7 @@
     "@mapbox/mapbox-sdk": "^0.16.1",
     "@mui/material": "^6.3.0",
     "@mui/styled-engine-sc": "^6.3.0",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "leaflet": "^1.9.4",
     "leaflet-routing-machine": "^3.2.12",
@@ -27,6 +28,8 @@
     "react-dom": "^19.0.0-rc.1",
     "react-leaflet": "^5.0.0-rc.2",
     "react-router-dom": "^7.0.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "styled-components": "^6.1.13"
   },
   "devDependencies": {

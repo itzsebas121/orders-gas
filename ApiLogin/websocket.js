@@ -1,26 +1,42 @@
-const WebSocket = require("ws");
 
-// Crear un servidor WebSocket
-const wss = new WebSocket.Server({ port: 8080 });
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
 
-wss.on("connection", (ws) => {
-    console.log("Un cliente se ha conectado.");
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+        allowedHeaders: ['my-custom-header'],
+        credentials: true
+    }
+});
 
-    // Escuchar mensajes de un cliente
-    ws.on("message", (message) => {
-        console.log("Mensaje recibido:", message);
+app.get('/', (req, res) => {
+    res.send('Servidor WebSocket con Socket.IO funcionando!');
+});
 
-        // Reenviar el mensaje a todos los clientes conectados
-        wss.clients.forEach((client) => {
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(message);
-            }
-        });
+io.on('connection', (socket) => {
+    console.log('Nuevo cliente conectado:', socket.id);
+
+    socket.on('sendMessageToOtherClient', (message) => {
+        console.log('Mensaje recibido de un cliente:', message);
+
+        socket.broadcast.emit('receiveMessageFromOtherClient', message);
     });
+    socket.on('AgreeOrder', (data) => {
+        console.log('Mensaje:', data);
+        socket.broadcast.emit('AgreeOrder', 'Pedido Aceptado');
+    });
+    socket.emit('message', '¡Bienvenido al servidor WebSocket!');
 
-    ws.on("close", () => {
-        console.log("Un cliente se ha desconectado.");
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado:', socket.id);
     });
 });
 
-console.log("Servidor WebSocket corriendo en ws://localhost:8080");
+server.listen(8080, () => {
+    console.log('Servidor WebSocket corriendo en http://localhost:8080');
+});

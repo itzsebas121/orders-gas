@@ -3,6 +3,7 @@ import Timeline from "../../mini-components/Timeline";
 import Loading from "../../../../components/Loading";
 const ItemState = lazy(() => import("../../mini-components/ItemState"));
 import Map from "../../../../components/Map";
+import '../styles.css'
 
 const DetailOrder = (props) => {
   const { OrderId, hidden } = props;
@@ -69,7 +70,7 @@ const DetailOrder = (props) => {
 
         <div className="details-order">
           <h3>Detalles del pedido</h3>
-          <div className="table" style={{ height: '120px' }}>
+          <div className="table detail" style={{ height: '120px' }}>
             <table >
               <thead>
                 <tr>

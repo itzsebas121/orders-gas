@@ -15,6 +15,7 @@
     padding: 5px 10px;
     border-radius: 20px;
     transition: all 0.3s ease;
+    text-align: center;
 }
 .parrafo:hover{
     transform: scale(1.1);
@@ -29,4 +30,21 @@
 .p-pendiente {
     background-color: rgb(254 240 138);
     color: rgb(133 77 14);
+}
+@media (max-width: 400px) { 
+    .card-header-order{
+        flex-direction: column;
+        gap: .81em;
+        text-align: center;
+        align-items: center;
+    }
+    .parrafo{
+        width: 100px;
+    }
+    .card-content{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
 }

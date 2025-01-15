@@ -1,43 +1,53 @@
 import React, { useState } from 'react'
-
+import io from 'socket.io-client';
+const socket = io('http://localhost:8080');
 
 const ItemNewOrder = (props) => {
-    const { order } = props
+    const { order, user } = props
     const [locationCurrent, setLocationCurrent] = useState("")
-    const handlesumit = () => {
-        alert(order.OrderID + "  aver a qui")
-        getLocation()
-        alert(locationCurrent)
-    }
-    const getLocation = () => {
-        if ("geolocation" in navigator) {
-          const watchId = navigator.geolocation.watchPosition(
-            (position) => {
-                const aux = position.coords.latitude +", "+ position.coords.longitude
-              console.log(`Latitud: ${position.coords.latitude}`);
-              console.log(`Longitud: ${position.coords.longitude}`);
-              console.log(`Precisión: ${position.coords.accuracy} metros`);
-              setLocationCurrent(aux)
-            },
-            (error) => {
-              console.error("Error al obtener ubicación:", error.message);
-            },
-            {
-              enableHighAccuracy: true, 
-              timeout: 15000,
-              maximumAge: 0,
+    const handleSubmit = () => {
+        getLocation((currentLocation) => {
+            const orderAcept = {
+                "OrderID":order.OrderID, 
+                "DistributorID":user.id, 
+                "Location_Current":currentLocation 
             }
-          );
-      
-          setTimeout(() => {
-            navigator.geolocation.clearWatch(watchId);
-          }, 60000); 
+            fetch('http://localhost:3000/AceptOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderAcept)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    socket.emit('AgreeOrder', data);
+                })
+                .catch(error => console.error(error));
+        });
+    };
+
+    const getLocation = (callback) => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const aux = position.coords.latitude + ", " + position.coords.longitude;
+                    setLocationCurrent(aux); 
+                    callback(aux); 
+                },
+                (error) => {
+                    console.error("Error al obtener ubicación:", error.message);
+                },
+                {
+                    enableHighAccuracy: true,
+                }
+            );
         } else {
-          alert("Geolocalización no está disponible en este navegador.");
+            alert("Geolocalización no está disponible en este navegador.");
         }
-      };
-      
-      
+    };
+
+
     return (
         <div className="item-new-order">
             <div className="container-item">
@@ -54,7 +64,7 @@ const ItemNewOrder = (props) => {
                 <p className="total">Total: <span>${order.Total}</span></p>
                 <p className="location">Dirección: <span>{order.LocationName}</span></p>
                 <div className="buttons-new-orders">
-                    <button onClick={handlesumit}>Aceptar pedido</button>
+                    <button onClick={handleSubmit}>Aceptar pedido</button>
                 </div>
             </div>
 

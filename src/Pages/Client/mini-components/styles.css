@@ -47,3 +47,10 @@
 .overlay {
     display: none;
 }
+@media (max-width: 480px) {
+    
+    .content-summary p {
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+}

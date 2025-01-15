@@ -2,90 +2,65 @@ import React, { useState, useEffect, useRef } from "react";
 import ItemCurrentOrder from "./ItemCurrentOrder";
 import Loading from "../../../../components/Loading"
 import { use } from "react";
+import io from 'socket.io-client';
+const socket = io('http://localhost:8080');
 const CurrentOrdersDistributor = (props) => {
-    const { user } = props;
+    const { user, sendOverlayClass } = props;
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const hasMounted = useRef(false);
+    const [distributor, setDistributor] = useState([]);
+    const [OrderId, setOrderId] = useState("");
 
-    /*  const orders = [
-        {
-            nameClient: "Sebas Tipan",
-            items: [
-                { item: "2 x Gas Domestico" }
-            ],
-            total: 45,
-            phoneNumber:"5939989898989898",
-            state: "Pendiente"
-        },
-        {
-            nameClient: "Carlos Mendoza",
-            items: [
-                { item: "1 x Gas Domestico" },
-                { item: "3 x Gas Industrial" }
-            ],
-            total: 35,
-            state: "Completado"
-        },
-        {
-            nameClient: "Ana Gómez",
-            items: [
-                { item: "5 x Gas Domestico" },
-                { item: "2 x Gas Industrial" }
-            ],
-            total: 50,
-            state: "Pendiente"
-        },
-        {
-            nameClient: "Luis Fernández",
-            items: [
-                { item: "6 x Gas Domestico" },
-                { item: "1 x Gas Industrial" }
-            ],
-            total: 60,
-            state: "Completado"
-        },
-        {
-            nameClient: "Pedro Ruiz",
-            items: [
-                { item: "3 x Gas Domestico" },
-                { item: "4 x Gas Industrial" }
-            ],
-            total: 55,
-            state: "Pendiente"
+    const handleOrderId = (value) => {
+        sendOverlayClass(value);
+        setOrderId(value);
+    };
+    const getCurrentOrder = async () => {
+        
+
+        try {
+            const response = await fetch(`http://localhost:3000/GetCurrentOrdersDistributor/${user.id}`);
+            const data = await response.json();
+            setOrders(data);
+            setLoading(false);
+            setDistributor(user);
+        } catch (error) {
+            console.error('Error:', error);
+            setLoading(false);
         }
-    ];
-  */
-
+    }
     useEffect(() => {
         if (user.id) {
             if (!hasMounted.current) {
-
                 hasMounted.current = true;
-
-                fetch(`http://localhost:3000/GetCurrentOrdersDistributor/${user.id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        setOrders(data)
-                        console.log(data)
-                        setLoading(false)
-                    })
-                    .catch(error => console.error(error));
+                getCurrentOrder()
             }
         }
+        socket.on('AgreeOrder', (message) => {
+        });
     }, [user.id]);
 
     if (loading) {
-        return <Loading />
+        return <Loading />;
     }
+
     const orderlist = orders.map((element, index) => {
         return (
-            < ItemCurrentOrder order={element} key={index} />);
-    })
+            <ItemCurrentOrder
+                order={element}
+                key={index}
+                onSendValue={handleOrderId}
+            />
+        );
+    });
+
     return (
         <div className="current-orders-container">
-            {orders.length != 0 ? orderlist : <h1>Usted no tiene pedidos pendientes de entrega</h1>}
+            {orders.length !== 0 ? orderlist : <h1>Usted no tiene pedidos pendientes de entrega</h1>}
         </div>
     );
-}
+};
+
+
 export default CurrentOrdersDistributor;
