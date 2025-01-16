@@ -32,9 +32,19 @@ const ItemCurrentOrder = (props) => {
             }
         ).then(response => response.json()).then(data => alert(data.message))
     };
-
     const handleDelivered = () => {
-        alert("Lógica para marcar el pedido como entregado");
+        fetch(
+            `http://localhost:3000/DeliveredOrder`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    OrderID: order.OrderID,
+                })
+            }
+        ).then(response => response.json()).then(data => alert(data.message))
     };
 
     return (

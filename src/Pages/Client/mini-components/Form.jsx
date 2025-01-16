@@ -6,6 +6,7 @@ const Form = (props) => {
     const [cylinders, setCylinders] = useState([])
     const [overlay, setOverlay] = useState(false);
     const [detailOrder, setDetailOrder] = useState([]);
+    const [total, setTotal] = useState(0);
     const handlePrice = (e) => {
 
         document.getElementById('price').value = e.target.options[e.target.selectedIndex].getAttribute('data-price')
@@ -39,6 +40,7 @@ const Form = (props) => {
         const row = document.createElement('tr')
         row.innerHTML = `<td>${cylinder.options[cylinder.selectedIndex].text}</td><td>${cantidad}</td><td>$ ${price}</td> <td>$${cantidad * price}</td>`
         tbody.appendChild(row)
+        setTotal(total + cantidad * price)
     }
     const handleSubmit = () => {
         if (detailOrder.length === 0) {
@@ -110,7 +112,7 @@ const Form = (props) => {
                         </tbody>
                     </table>
                 </div>
-                <label >Total</label>
+                <label ><b style={{color:"#ffff00"}}>Total a pagar:</b> $ {total}</label>
                 <button type='button' onClick={handleSubmit}>Hacer Pedido</button>
             </form>
             {overlay && <NewOrder hidden={hiddenOverlay} newOrder={user} OrderDetail={detailOrder}></NewOrder>}

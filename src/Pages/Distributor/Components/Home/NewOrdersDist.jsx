@@ -3,15 +3,17 @@ import ItemNewOrder from './ItemNewOrder'
 import Loading from "../../../../components/Loading"
 import io from 'socket.io-client';
 const socket = io('http://localhost:8080');
+import { useNotification } from '../../../../components/Noty';
 const NewOrdersDist = (props) => {
     const { user } = props;
     const [orders, setOrders] = useState([])
     const [loading, setLoading] = useState(true)
     const distributor = useRef(null)
     const hasMounted = useRef(false);
-
+    const { emitirNotificacion } = useNotification();
+    const [count, setCount] = useState(0);
     const getNewOrders = async () => {
-        setLoading(true); 
+        setLoading(true);
         try {
             const response = await fetch('http://localhost:3000/getNewOrders');
             const data = await response.json();
@@ -28,10 +30,15 @@ const NewOrdersDist = (props) => {
         if (!hasMounted.current) {
             getNewOrders();
             socket.on('receiveMessageFromOtherClient', (message) => {
-                alert('Nuevo pedido cerca de ti en: ' + message.nameLocation);
+                emitirNotificacion("Nuevo pedido cerca de ti", {
+                    body: `Ubicación: ${message.nameLocation}`,
+                    icon: "https://gas-asap.co.za/uploads/images/300-IMG201805104047.png",
+                });
                 getNewOrders();
+                hasMounted.current = true;
             });
             socket.on('AgreeOrder', (message) => {
+                
                 getNewOrders();
             });
         }

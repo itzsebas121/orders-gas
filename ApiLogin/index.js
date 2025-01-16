@@ -105,7 +105,7 @@ app.get('/ClientCurrentOrders/:id', async (req, res) => {
 app.get('/ClientHistoryOrders/:id', async (req, res) => {
     const id = req.params.id;
     try {
-        const result = await pool.request().query`select * from vwOrdersDetails where ClientID = ${id}`;
+        const result = await pool.request().query`select * from vwOrdersDetails where ClientID = ${id} ORDER BY ORDERID DESC`;
         const orders = []
         for (let index = 0; index < result.recordset.length; index++) {
             const order = result.recordset[index];
@@ -284,6 +284,26 @@ app.get('/GetCurrentOrdersDistributor/:id', async (req, res) => {
     }
 })
 
+app.post('/DeliveredOrder', async (req, res) => {
+    try {
+        const request = pool.request();
+        const { OrderID } = req.body;
+
+        request.input('OrderID', sql.Int, OrderID);
+
+        const result = await request.execute('MarkOrderAsDelivered');
+        console.log(result+"Esto es el contenido");
+        if (result.rowsAffected.length > 0) {
+            res.status(200).json({ message: 'Pedido aceptado correctamente' });
+        } else {
+            res.status(404).send({message: 'Pedido no encontrado'});
+        }
+
+    } catch (err) {
+        console.error('Error en la conexión o consulta:', err);
+        res.status(500).send('Error en la base de datos');
+    }
+});
 app.post('/CancelOrder', async (req, res) => {
     try {
         const request = pool.request();
@@ -292,7 +312,6 @@ app.post('/CancelOrder', async (req, res) => {
         request.input('OrderID', sql.Int, OrderID);
 
         const result = await request.execute('CancelOrder');
-        console.log(result);
         if (result.rowsAffected.length > 0) {
             res.status(200).json({ message: 'Pedido cancelado correctamente' });
         } else {
@@ -318,6 +337,24 @@ app.post('/CreateClient', async (req, res) => {
         request.input('NameLocation', sql.NVarChar, NameLocation);
 
         const result = await request.execute('InsertClient');
+        res.status(200).json({message: 'Exito'});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({message: 'Error'});;
+    }
+});
+app.post('/CreateDistributor', async (req, res) => {
+    const { Name, LastName, HashedPassword, UserName, PhoneNumber} = req.body;
+    try {
+
+        const request = pool.request();
+        request.input('Name', sql.NVarChar, Name);
+        request.input('LastName', sql.NVarChar, LastName);
+        request.input('HashedPassword', sql.NVarChar, HashedPassword);
+        request.input('UserName', sql.NVarChar, UserName);
+        request.input('PhoneNumber', sql.Decimal, PhoneNumber);
+
+        const result = await request.execute('InsertDistributor');
         res.status(200).json({message: 'Exito'});
     } catch (err) {
         console.log(err);

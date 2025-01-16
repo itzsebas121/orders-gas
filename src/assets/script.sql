@@ -98,7 +98,7 @@ CREATE OR ALTER PROCEDURE InsertClient
 AS
 BEGIN
     BEGIN TRY
-        BEGIN TRANSACTION;
+    BEGIN TRANSACTION;
 		OPEN SYMMETRIC KEY MySymmetricKey DECRYPTION BY CERTIFICATE MyCert;
         DECLARE @EncryptedPassword VARBINARY(MAX);
         SET @EncryptedPassword = ENCRYPTBYKEY(KEY_GUID('MySymmetricKey'), @HashedPassword);
@@ -395,8 +395,7 @@ BEGIN
 END;
 GO
 CREATE OR ALTER PROCEDURE MarkOrderAsDelivered
-    @OrderID INT,
-    @DeliveryDate DATETIME
+    @OrderID INT
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM orders WHERE OrderID = @OrderID)

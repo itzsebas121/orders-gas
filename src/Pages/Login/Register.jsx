@@ -130,7 +130,7 @@ const Register = () => {
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.message=="Exito") {
+                    if (data.message == "Exito") {
                         alert("Usuario creado correctamente");
                         clearInputs();
                         closeRegister();
@@ -142,7 +142,34 @@ const Register = () => {
                     console.error('Error al enviar la solicitud:', error);
                 });
         } else {
+            const Distributor = {
+                Name: name,
+                LastName: lastname,
+                HashedPassword: password,
+                UserName: username,
+                PhoneNumber: phone
+            }
 
+            fetch('http://localhost:3000/CreateDistributor', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Distributor),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message == "Exito") {
+                        alert("Usuario creado correctamente");
+                        clearInputs();
+                        closeRegister();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al enviar la solicitud:', error);
+                });
         }
         const locationUser = location;
         const locationNameUser = locationName;
