@@ -45,6 +45,21 @@ body {
   grid-template-areas: "navbar content" "navbar content";
 }
 
+.icon-menu.active{
+  z-index: -41;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
+.icon-menu.active, .icon-menu-bar{
+  display: flex;
+ 
+  background-color: #007BFF;
+  color: white;
+  font-size: 1.5em;
+  padding: 10px;
+  border-radius:100%
+}
 button {
   padding: 0.75em;
   background-color: #007BFF;
@@ -74,6 +89,7 @@ button:hover {
 }
 
 @media (max-width:1340px) {
+  
   .container {
     grid-template-columns: 0px 1fr;
   }
@@ -85,6 +101,9 @@ button:hover {
     position: absolute;
     z-index: 3200;
     left: -500px;
+  }
+  .icon-menu.active{
+    z-index: 100
   }
 
 }

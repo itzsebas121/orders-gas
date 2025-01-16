@@ -2,7 +2,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-
+const port = process.env.PORT || 4000;
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -30,6 +30,14 @@ io.on('connection', (socket) => {
         console.log('Mensaje:', data);
         socket.broadcast.emit('AgreeOrder', data);
     });
+    socket.on('CancelOrder', (data) => {
+        console.log('Mensaje:', data);
+        socket.broadcast.emit('CancelOrder', data);
+    });
+    socket.on('OrderDelivered', (data) => {
+        console.log('Mensaje:', data);
+        socket.broadcast.emit('OrderDelivered', data);
+    });
     socket.emit('message', '¡Bienvenido al servidor WebSocket!');
 
     socket.on('disconnect', () => {
@@ -37,6 +45,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(8080, () => {
+server.listen(port, () => {
     console.log('Servidor WebSocket corriendo en http://localhost:8080');
 });

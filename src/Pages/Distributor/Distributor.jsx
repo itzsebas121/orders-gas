@@ -29,7 +29,7 @@ const Distributor = () => {
                 <Routes>
                     <Route index element={<HomeDistributor user={Distributor} />} />
                     <Route path='/HomeDistributor' element={<HomeDistributor user={Distributor} />} />
-                    <Route path='/HistoryDistributor' element={<HistoryDistributor />} />
+                    <Route path='/HistoryDistributor' element={<HistoryDistributor user={Distributor} />} />
                 </Routes>
             </div>
         </div>

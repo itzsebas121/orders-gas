@@ -1,12 +1,10 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
-
 import ComponentLoading from "../../../../components/ComponentLoading";
-
 
 const CurrentOrder = lazy(() => import("./CurrentOrder"));
 
 const CurrentOrders = (props) => {
-    const { sendOverlayClass, user} = props;
+    const { sendOverlayClass, user, orderUpdated } = props; // Añadido orderUpdated
     const [OrderId, setOrderId] = useState("");
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,27 +14,32 @@ const CurrentOrders = (props) => {
         setOrderId(value);
     };
 
-    useEffect(() => {
-        const fetchOrders = async () => {
+    const fetchOrders = async () => {
+        try {
             const response = await fetch(`http://localhost:3000/ClientCurrentOrders/${user.id}`);
             const data = await response.json();
-        
+
             if (Array.isArray(data)) {
-                return data;
+                setOrders(data);
             } else {
                 throw new Error("Los datos no son un arreglo");
             }
+        } catch (error) {
+            console.error("Error al obtener las órdenes:", error);
+        } finally {
+            setLoading(false);
         }
-        fetchOrders()
-            .then(data => {
-                setOrders(data);
-                setLoading(false);
-            })
-            .catch(error => {
-                console.error("Error al obtener las órdenes:", error);
-                setLoading(false);
-            });
+    };
+
+    useEffect(() => {
+        fetchOrders();
     }, [user.id]);
+
+    useEffect(() => {
+        if (orderUpdated) {
+            fetchOrders();
+        }
+    }, [orderUpdated]);
 
     if (loading) {
         return (
@@ -47,7 +50,7 @@ const CurrentOrders = (props) => {
         );
     }
 
-    const OrderList = orders.map(order => (
+    const OrderList = orders.map((order) => (
         <CurrentOrder
             key={order.OrderID}
             onSendValue={handleOrderId}
@@ -61,9 +64,9 @@ const CurrentOrders = (props) => {
     return (
         <div className="current-orders">
             <h1>Pedidos Actuales</h1>
-            {OrderList.length != 0 ? OrderList : <h2>Usted no tiene pedidos pendientes</h2>}
+            {OrderList.length !== 0 ? OrderList : <h2>Usted no tiene pedidos pendientes</h2>}
         </div>
     );
-}
+};
 
 export default CurrentOrders;

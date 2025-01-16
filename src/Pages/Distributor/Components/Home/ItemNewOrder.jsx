@@ -10,8 +10,10 @@ const ItemNewOrder = (props) => {
             const orderAcept = {
                 "OrderID":order.OrderID, 
                 "DistributorID":user.id, 
-                "Location_Current":currentLocation 
+                "Location_Current":currentLocation ,
+                "ClientID":order.ClientID
             }
+            
             fetch('http://localhost:3000/AceptOrder', {
                 method: 'POST',
                 headers: {

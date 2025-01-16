@@ -1,0 +1,147 @@
+.history {
+    padding: 40px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.history-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.filter-search,
+.filter-status {
+    width: 48%;
+}
+
+.search-input,
+.status-select {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1rem;
+    border-radius: 6px;
+}
+
+.search-input {
+    background-color: #434343;
+}
+
+.history-table {
+    margin-top: 20px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.table-distributor {
+    display: flex;
+    
+    width: 80%;
+    height: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #dddddd60;
+    font-size: 1rem;
+}
+
+th {
+}
+
+td.status {
+    font-weight: bold;
+}
+
+.Pendiente {
+    color: orange;
+}
+
+.En\ Camino {
+    color: blue;
+}
+
+.Entregado {
+    color: green;
+}
+
+.Cancelado {
+    color: red;
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filter-search,
+    .filter-status {
+        width: 100%;
+    }
+
+    th, td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    .history-title {
+        font-size: 2rem;
+    }
+
+    .search-input,
+    .status-select {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .history {
+        padding: 20px;
+    }
+
+    .filters {
+        gap: 10px;
+    }
+
+    .history-title {
+        font-size: 1.8rem;
+    }
+
+    .table-distributor {
+        height: 400px;
+       
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .search-input,
+    .status-select {
+        font-size: 0.9rem;
+    }
+}

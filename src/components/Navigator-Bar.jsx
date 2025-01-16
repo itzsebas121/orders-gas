@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faClockRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons/faBars";
 
 import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "./Auth";
@@ -16,7 +17,7 @@ const NavigatorBar = (props) => {
 
     return (
         <nav className="navigator-bar">
-
+            <FontAwesomeIcon icon={faBars} className="icon-menu-bar" onClick={() => document.querySelector('.navigator-bar').classList.remove('active')} />
             <HeaderUber />
             <div className="items-nav">
                 <ul>
@@ -31,7 +32,6 @@ const NavigatorBar = (props) => {
                 </ul>
                 <ul>
                     <li>
-                        <NavLink to={"/Client/Profile"} className={isActive('/Client/Profile') ? 'item active' : 'item'}><p><FontAwesomeIcon icon={faUser} />Perfil</p></NavLink>
                         <label onClick={logout} className="item"><p><FontAwesomeIcon icon={faDoorOpen} />Cerrar Sesión</p></label>
                     </li>
 

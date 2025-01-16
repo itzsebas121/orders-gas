@@ -38,7 +38,6 @@ const NewOrdersDist = (props) => {
                 hasMounted.current = true;
             });
             socket.on('AgreeOrder', (message) => {
-                
                 getNewOrders();
             });
         }
@@ -47,6 +46,7 @@ const NewOrdersDist = (props) => {
             socket.off('AgreeOrder');
         };
     }, [user]);
+
     if (loading) {
         return <Loading />
     }

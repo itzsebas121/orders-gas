@@ -5,24 +5,20 @@ const ItemState = lazy(() => import("../../mini-components/ItemState"));
 import Map from "../../../../components/Map";
 import '../styles.css'
 
+
 const DetailOrder = (props) => {
-  const { OrderId, hidden } = props;
+  const { OrderId, hidden , orderUpdated } = props;
   const [Orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const orderDateUTC = new Date(Orders.OrderDate);
-
   const formattedDate = orderDateUTC.toLocaleString();
-
   const AproxDate = new Date(orderDateUTC);
-
   const deliveryDate = new Date(AproxDate);
   deliveryDate.setMinutes(deliveryDate.getMinutes() + 20);
   const hiddenOverlay = () => {
     hidden(false);
   }
-
-  useEffect(() => {
+  const getOrderDetails = () => {
     fetch(`http://localhost:3000/OrderDetails/${OrderId}`)
       .then(response => response.json())
       .then(data => {
@@ -32,7 +28,11 @@ const DetailOrder = (props) => {
       .catch(error => {
         console.error('Error:', error);
       });
-  }, []);
+  }
+  useEffect(() => {
+    getOrderDetails()
+    
+  }, [orderUpdated]);
 
   if (loading) {
     return (

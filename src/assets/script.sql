@@ -417,6 +417,7 @@ create VIEW vwGetNewOrders
 as
 SELECT 
 O.OrderID,
+c.ClientID,
 c.Name, 
 c.LastName, 
 o.Total, 
@@ -455,3 +456,20 @@ LEFT join Clients c on o.ClientID = c.ClientID
 where o.OrderStatus = 'En Camino'
 
 GO
+CREATE VIEW vwDistributorHistory
+as
+SELECT 
+    o.OrderID,
+    o.OrderDate,
+    o.OrderStatus,
+    c.Name AS ClientName,
+    c.LastName AS ClientLastName,
+    o.LocationName,
+    o.Total AS OrderTotal
+FROM 
+    Orders o
+JOIN 
+    Clients c ON o.ClientID = c.ClientID
+JOIN 
+    Distributors d ON o.DistributorID = d.DistributorID
+	

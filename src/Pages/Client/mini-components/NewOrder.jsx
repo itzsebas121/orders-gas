@@ -11,7 +11,6 @@ const NewOrder = (props) => {
 
         if (!hasMounted.current) {
             hasMounted.current = true;
-            alert(JSON.stringify(newOrder));
             fetch(`http://localhost:3000/createOrder`, {
                 method: 'POST',
                 headers: {

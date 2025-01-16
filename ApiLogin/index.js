@@ -253,6 +253,15 @@ app.get('/getNewOrders', async (req, res) => {
         console.log(err);
     }
 })
+app.get('/distributorHistory/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        const result = await pool.request().query`select * from vwDistributorHistory where DistributorID = ${id} order by OrderID desc`;
+        res.status(200).json(result.recordset);
+    } catch (err) {
+        console.log(err);
+    }
+})
 app.get('/GetCurrentOrdersDistributor/:id', async (req, res) => {
     const orderid = req.params.orderid;
     const id = req.params.id;
@@ -292,11 +301,11 @@ app.post('/DeliveredOrder', async (req, res) => {
         request.input('OrderID', sql.Int, OrderID);
 
         const result = await request.execute('MarkOrderAsDelivered');
-        console.log(result+"Esto es el contenido");
+        console.log(result + "Esto es el contenido");
         if (result.rowsAffected.length > 0) {
             res.status(200).json({ message: 'Pedido aceptado correctamente' });
         } else {
-            res.status(404).send({message: 'Pedido no encontrado'});
+            res.status(404).send({ message: 'Pedido no encontrado' });
         }
 
     } catch (err) {
@@ -337,14 +346,14 @@ app.post('/CreateClient', async (req, res) => {
         request.input('NameLocation', sql.NVarChar, NameLocation);
 
         const result = await request.execute('InsertClient');
-        res.status(200).json({message: 'Exito'});
+        res.status(200).json({ message: 'Exito' });
     } catch (err) {
         console.log(err);
-        res.status(500).json({message: 'Error'});;
+        res.status(500).json({ message: 'Error' });;
     }
 });
 app.post('/CreateDistributor', async (req, res) => {
-    const { Name, LastName, HashedPassword, UserName, PhoneNumber} = req.body;
+    const { Name, LastName, HashedPassword, UserName, PhoneNumber } = req.body;
     try {
 
         const request = pool.request();
@@ -355,10 +364,10 @@ app.post('/CreateDistributor', async (req, res) => {
         request.input('PhoneNumber', sql.Decimal, PhoneNumber);
 
         const result = await request.execute('InsertDistributor');
-        res.status(200).json({message: 'Exito'});
+        res.status(200).json({ message: 'Exito' });
     } catch (err) {
         console.log(err);
-        res.status(500).json({message: 'Error'});;
+        res.status(500).json({ message: 'Error' });;
     }
 });
 process.on('SIGINT', async () => {
